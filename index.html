@@ -795,7 +795,6 @@
         // CONFIGURATION
         // ============================================
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby24zyVTnO81DATvp3iXnJc8uCXuizK-rv6ZOrmvEgtw7LGdwkK0ExPCSWaVRm09UujyQ/exec';
-        const TALLY_URL = 'https://tally.so/r/eqDG0e';
 
         // ============================================
         // STATE
@@ -1043,23 +1042,36 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+
+                // Show success message
+                showSuccess();
+
             } catch (err) {
-                console.log('Sheet save attempted');
+                console.error('Error saving to sheets:', err);
+                alert('There was an error submitting. Please try again.');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
             }
-
-            // Redirect to Tally
-            const params = new URLSearchParams({
-                FirstName: firstNameVal,
-                Email: emailVal,
-                FromLocation: fromLocation,
-                FromLatLng: fromLatLng,
-                ToLocation: toLocation,
-                ToLatLng: toLatLng,
-                Distance: distance
-            });
-
-            window.location.href = `${TALLY_URL}?${params.toString()}`;
         });
+
+        // ============================================
+        // SUCCESS MESSAGE
+        // ============================================
+        function showSuccess() {
+            document.querySelector('.form-card').innerHTML = `
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="width: 80px; height: 80px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <svg width="40" height="40" fill="none" stroke="white" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 12px;">You're registered!</h2>
+                    <p style="color: #64748b; line-height: 1.6; margin-bottom: 24px;">We'll notify you by email when we find a carpool match for your route.</p>
+                    <button onclick="location.reload()" style="background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; font-weight: 500; cursor: pointer;">Submit another</button>
+                </div>
+            `;
+            document.querySelector('.progress-container').style.display = 'none';
+        }
 
         // Initial progress update
         updateProgress();
