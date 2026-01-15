@@ -43,7 +43,7 @@
             min-height: 100vh;
         }
 
-        /* ========== PROGRESS BAR (Fixed Top) ========== */
+        /* ========== PROGRESS BAR ========== */
         .progress-bar-fixed {
             position: fixed;
             top: 0;
@@ -61,11 +61,11 @@
             transition: width 0.3s ease;
         }
 
-        /* ========== TUTORIAL OVERLAY ========== */
+        /* ========== TUTORIAL ========== */
         .tutorial-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             z-index: 9999;
             display: flex;
             align-items: center;
@@ -108,20 +108,34 @@
         }
 
         .tutorial-icon {
-            font-size: 64px;
-            margin-bottom: 24px;
-            animation: bounce 2s infinite;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: rgba(22, 163, 74, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
         }
 
-        @keyframes bounce {
+        .tutorial-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--primary-light);
+        }
+
+        @keyframes pulse {
 
             0%,
             100% {
-                transform: translateY(0);
+                transform: scale(1);
+                opacity: 1;
             }
 
             50% {
-                transform: translateY(-10px);
+                transform: scale(1.05);
+                opacity: 0.8;
             }
         }
 
@@ -133,7 +147,7 @@
 
         .tutorial-text {
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 32px;
             line-height: 1.6;
         }
@@ -177,19 +191,21 @@
 
         .tutorial-skip {
             display: block;
+            width: 100%;
             margin-top: 16px;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.4);
             font-size: 14px;
             cursor: pointer;
             background: none;
             border: none;
+            text-align: center;
         }
 
         .tutorial-skip:hover {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        /* ========== MAIN PAGE ========== */
+        /* ========== PAGE ========== */
         .page {
             padding: 24px 16px 60px;
             max-width: 480px;
@@ -252,7 +268,29 @@
             color: var(--primary);
         }
 
-        /* ========== INPUTS ========== */
+        /* Location Banner */
+        .location-banner {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .location-banner-text {
+            font-size: 14px;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+
+        .location-banner-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Inputs */
         .input-group {
             margin-bottom: 16px;
         }
@@ -314,7 +352,7 @@
             margin-bottom: 8px;
         }
 
-        /* ========== LOCATION INPUT ========== */
+        /* Location */
         .location-wrapper {
             position: relative;
         }
@@ -326,6 +364,9 @@
             transform: translateY(-50%);
             width: 20px;
             height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .location-status svg {
@@ -333,16 +374,20 @@
             height: 20px;
         }
 
-        .location-status .loading {
-            animation: spin 1s linear infinite;
+        .loc-spinner {
             color: var(--text-muted);
+            animation: spinAnim 1s linear infinite;
         }
 
-        .location-status .success {
+        .loc-check {
             color: var(--success);
         }
 
-        @keyframes spin {
+        @keyframes spinAnim {
+            from {
+                transform: rotate(0deg);
+            }
+
             to {
                 transform: rotate(360deg);
             }
@@ -381,7 +426,7 @@
             display: inline-block;
         }
 
-        /* ========== DISTANCE OPTIONS ========== */
+        /* Distance */
         .distance-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -395,6 +440,7 @@
         .distance-option input {
             position: absolute;
             opacity: 0;
+            pointer-events: none;
         }
 
         .distance-card {
@@ -428,7 +474,7 @@
             color: var(--text-muted);
         }
 
-        /* ========== SUBMIT BUTTON ========== */
+        /* Submit */
         .submit-btn {
             width: 100%;
             padding: 14px;
@@ -443,6 +489,10 @@
             margin-top: 20px;
             transition: all 0.2s;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .submit-btn:disabled {
@@ -454,29 +504,25 @@
             background: var(--primary-dark);
         }
 
-        .submit-btn .spinner {
-            display: none;
+        .btn-spinner {
             width: 20px;
             height: 20px;
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-top-color: white;
             border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            animation: spinAnim 0.8s linear infinite;
+            display: none;
         }
 
         .submit-btn.loading .btn-text {
-            opacity: 0;
+            display: none;
         }
 
-        .submit-btn.loading .spinner {
+        .submit-btn.loading .btn-spinner {
             display: block;
         }
 
-        /* ========== SUCCESS SCREEN ========== */
+        /* Success */
         .success-screen {
             display: none;
             text-align: center;
@@ -533,6 +579,7 @@
             display: flex;
             gap: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .share-btn {
@@ -566,7 +613,7 @@
             cursor: pointer;
         }
 
-        /* ========== UPDATE MODAL ========== */
+        /* Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -628,7 +675,7 @@
             border: 1px solid var(--border);
         }
 
-        /* ========== FOOTER ========== */
+        /* Footer */
         .footer {
             text-align: center;
             padding: 20px;
@@ -641,7 +688,7 @@
             text-decoration: none;
         }
 
-        /* ========== RESPONSIVE ========== */
+        /* Responsive */
         @media (max-width: 400px) {
             .page {
                 padding: 16px 12px 40px;
@@ -681,29 +728,51 @@
         <div class="progress-bar-fill" id="progressFill"></div>
     </div>
 
-    <!-- Tutorial Overlay -->
+    <!-- Tutorial -->
     <div class="tutorial-overlay" id="tutorial">
         <div class="tutorial-container">
             <div class="tutorial-slide active" data-slide="1">
-                <div class="tutorial-icon">🚗</div>
+                <div class="tutorial-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                </div>
                 <h2 class="tutorial-title">Welcome to Community Carpool</h2>
-                <p class="tutorial-text">We match you with neighbors heading the same direction. Save money, reduce
-                    emissions, and make new connections!</p>
+                <p class="tutorial-text">We match you with neighbors heading the same direction. Reduce emissions and
+                    make new connections!</p>
             </div>
             <div class="tutorial-slide" data-slide="2">
-                <div class="tutorial-icon">📍</div>
+                <div class="tutorial-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
                 <h2 class="tutorial-title">Tell Us Your Route</h2>
                 <p class="tutorial-text">Enter where you start and where you are going. We use approximate locations
-                    only, your exact address is never shared.</p>
+                    only. Your exact address is never shared.</p>
             </div>
             <div class="tutorial-slide" data-slide="3">
-                <div class="tutorial-icon">📧</div>
+                <div class="tutorial-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
                 <h2 class="tutorial-title">What Happens Next?</h2>
                 <p class="tutorial-text">First, you will receive an email with your estimated carbon footprint. When we
                     find a match, both parties get notified to coordinate.</p>
             </div>
             <div class="tutorial-slide" data-slide="4">
-                <div class="tutorial-icon">🤝</div>
+                <div class="tutorial-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
                 <h2 class="tutorial-title">Share for Better Matches</h2>
                 <p class="tutorial-text">The more people join from your area, the faster you get matched! Share with
                     neighbors and colleagues after signing up.</p>
@@ -751,6 +820,13 @@
                     </svg>
                     Your Details
                 </h2>
+
+                <!-- IP Location Banner -->
+                <div class="location-banner" id="locationBanner" style="display:none;">
+                    <div class="location-banner-text" id="locationText">You are located in United Arab Emirates</div>
+                    <div class="location-banner-sub">If this is wrong, your locations will still work</div>
+                </div>
+
                 <div class="input-group">
                     <label class="label">First Name</label>
                     <input type="text" id="firstName" class="input" placeholder="Your first name" />
@@ -762,7 +838,7 @@
                 </div>
             </div>
 
-            <!-- From Location -->
+            <!-- From -->
             <div class="section">
                 <h2 class="section-title">
                     <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -787,7 +863,7 @@
                 </div>
             </div>
 
-            <!-- To Location -->
+            <!-- To -->
             <div class="section">
                 <h2 class="section-title">
                     <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -853,11 +929,11 @@
 
             <button type="submit" id="submitBtn" class="submit-btn" disabled>
                 <span class="btn-text">Continue</span>
-                <span class="spinner"></span>
+                <span class="btn-spinner"></span>
             </button>
         </form>
 
-        <!-- Success Screen -->
+        <!-- Success -->
         <div class="success-screen" id="successScreen">
             <div class="success-icon">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -870,7 +946,7 @@
                 We will notify you when we find a match for your route.
             </p>
             <div class="share-section">
-                <div class="share-title">🚀 Get matched faster by sharing!</div>
+                <div class="share-title">Get matched faster by sharing!</div>
                 <div class="share-buttons">
                     <button class="share-btn whatsapp" onclick="shareWhatsApp()">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -907,9 +983,11 @@
         // ============================================
         // STATE
         // ============================================
-        let fromPlace = null, toPlace = null;
+        let fromLocationText = '', toLocationText = '';
+        let fromLatLng = '', toLatLng = '';
         let isFromManual = false, isToManual = false;
-        let userIP = '', userCountry = 'ae';
+        let fromSelected = false, toSelected = false;
+        let userIP = '', userCountry = 'ae', userCountryName = 'United Arab Emirates';
         let existingSubmission = null;
         let shouldUpdate = false;
 
@@ -924,6 +1002,8 @@
         const progressFill = document.getElementById('progressFill');
         const successScreen = document.getElementById('successScreen');
         const updateModal = document.getElementById('updateModal');
+        const locationBanner = document.getElementById('locationBanner');
+        const locationText = document.getElementById('locationText');
 
         // ============================================
         // TUTORIAL
@@ -958,7 +1038,6 @@
             localStorage.setItem('tutorialSeen', 'true');
         }
 
-        // Check if tutorial was seen
         if (localStorage.getItem('tutorialSeen')) {
             tutorial.classList.add('hidden');
         }
@@ -972,7 +1051,13 @@
                 const data = await res.json();
                 userIP = data.ip || '';
                 userCountry = (data.country_code || 'ae').toLowerCase();
-                console.log('IP:', userIP, 'Country:', userCountry);
+                userCountryName = data.country_name || 'United Arab Emirates';
+
+                // Show location banner
+                locationBanner.style.display = 'block';
+                locationText.textContent = 'You are located in ' + userCountryName;
+
+                console.log('IP:', userIP, 'Country:', userCountryName);
             } catch (e) {
                 console.log('IP fetch failed, using default');
             }
@@ -987,16 +1072,16 @@
             const total = 4;
 
             if (firstName.value.trim() && email.value.includes('@')) completed++;
-            if (fromPlace || (isFromManual && document.getElementById('fromManual').value.trim())) completed++;
-            if (toPlace || (isToManual && document.getElementById('toManual').value.trim())) completed++;
-            completed++; // Distance always selected
+            if (fromSelected || (isFromManual && document.getElementById('fromManual').value.trim())) completed++;
+            if (toSelected || (isToManual && document.getElementById('toManual').value.trim())) completed++;
+            completed++; // Distance always has default
 
             const percent = (completed / total) * 100;
             progressFill.style.width = percent + '%';
 
             // Enable submit
-            const hasFrom = fromPlace || (isFromManual && document.getElementById('fromManual').value.trim());
-            const hasTo = toPlace || (isToManual && document.getElementById('toManual').value.trim());
+            const hasFrom = fromSelected || (isFromManual && document.getElementById('fromManual').value.trim());
+            const hasTo = toSelected || (isToManual && document.getElementById('toManual').value.trim());
             const valid = firstName.value.trim() && email.value.includes('@') && hasFrom && hasTo;
             submitBtn.disabled = !valid;
         }
@@ -1035,16 +1120,16 @@
         function setLocationStatus(type, status) {
             const el = document.getElementById(type + 'Status');
             if (status === 'loading') {
-                el.innerHTML = '<svg class="loading" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
+                el.innerHTML = '<svg class="loc-spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
             } else if (status === 'success') {
-                el.innerHTML = '<svg class="success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                el.innerHTML = '<svg class="loc-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
             } else {
                 el.innerHTML = '';
             }
         }
 
         // ============================================
-        // MANUAL LOCATION TOGGLE
+        // MANUAL LOCATION
         // ============================================
         function setupManual(type) {
             const manualBtn = document.getElementById(type + 'ManualBtn');
@@ -1057,8 +1142,8 @@
                 wrapper.style.display = 'none';
                 manualWrapper.classList.add('show');
                 manualInput.focus();
-                if (type === 'from') { isFromManual = true; fromPlace = null; }
-                else { isToManual = true; toPlace = null; }
+                if (type === 'from') { isFromManual = true; fromSelected = false; }
+                else { isToManual = true; toSelected = false; }
                 setLocationStatus(type, '');
                 updateProgress();
             });
@@ -1067,12 +1152,19 @@
                 wrapper.style.display = 'block';
                 manualWrapper.classList.remove('show');
                 manualInput.value = '';
-                if (type === 'from') isFromManual = false;
-                else isToManual = false;
+                if (type === 'from') { isFromManual = false; }
+                else { isToManual = false; }
                 updateProgress();
             });
 
-            manualInput.addEventListener('input', updateProgress);
+            manualInput.addEventListener('input', () => {
+                if (manualInput.value.trim()) {
+                    setLocationStatus(type, 'success');
+                } else {
+                    setLocationStatus(type, '');
+                }
+                updateProgress();
+            });
         }
 
         setupManual('from');
@@ -1085,26 +1177,43 @@
             const fromEl = document.getElementById('fromInput');
             const toEl = document.getElementById('toInput');
 
-            // Set country restriction based on IP
             fromEl.componentRestrictions = { country: userCountry };
             toEl.componentRestrictions = { country: userCountry };
-            fromEl.types = ['establishment', 'geocode'];
-            toEl.types = ['establishment', 'geocode'];
 
             fromEl.addEventListener('gmp-placeselect', async (e) => {
                 setLocationStatus('from', 'loading');
-                fromPlace = e.place;
-                await fromPlace.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
-                setLocationStatus('from', 'success');
-                updateProgress();
+                try {
+                    const place = e.place;
+                    await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
+                    fromLocationText = place.formattedAddress || place.displayName || '';
+                    if (place.location) {
+                        fromLatLng = place.location.lat() + ',' + place.location.lng();
+                    }
+                    fromSelected = true;
+                    setLocationStatus('from', 'success');
+                    updateProgress();
+                } catch (err) {
+                    console.error('From place error:', err);
+                    setLocationStatus('from', '');
+                }
             });
 
             toEl.addEventListener('gmp-placeselect', async (e) => {
                 setLocationStatus('to', 'loading');
-                toPlace = e.place;
-                await toPlace.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
-                setLocationStatus('to', 'success');
-                updateProgress();
+                try {
+                    const place = e.place;
+                    await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
+                    toLocationText = place.formattedAddress || place.displayName || '';
+                    if (place.location) {
+                        toLatLng = place.location.lat() + ',' + place.location.lng();
+                    }
+                    toSelected = true;
+                    setLocationStatus('to', 'success');
+                    updateProgress();
+                } catch (err) {
+                    console.error('To place error:', err);
+                    setLocationStatus('to', '');
+                }
             });
         }
 
@@ -1120,7 +1229,7 @@
                     return true;
                 }
             } catch (e) {
-                console.log('Duplicate check failed');
+                console.log('Duplicate check failed:', e);
             }
             return false;
         }
@@ -1145,8 +1254,8 @@
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
-            // Check for duplicate
-            if (!shouldUpdate) {
+            // Check duplicate (skip if already chose to update/new)
+            if (!shouldUpdate && existingSubmission === null) {
                 const exists = await checkDuplicate(emailVal);
                 if (exists) {
                     submitBtn.classList.remove('loading');
@@ -1157,37 +1266,41 @@
             }
 
             // Get location data
-            let fromLocation = '', fromLatLng = '';
-            let toLocation = '', toLatLng = '';
+            let finalFromLocation = '';
+            let finalFromLatLng = '';
+            let finalToLocation = '';
+            let finalToLatLng = '';
 
             if (isFromManual) {
-                fromLocation = document.getElementById('fromManual').value.trim();
-                fromLatLng = '';
-            } else if (fromPlace) {
-                fromLocation = fromPlace.formattedAddress || fromPlace.displayName || '';
-                fromLatLng = fromPlace.location ? `${fromPlace.location.lat()},${fromPlace.location.lng()}` : '';
+                finalFromLocation = document.getElementById('fromManual').value.trim();
+                finalFromLatLng = '';
+            } else {
+                finalFromLocation = fromLocationText;
+                finalFromLatLng = fromLatLng;
             }
 
             if (isToManual) {
-                toLocation = document.getElementById('toManual').value.trim();
-                toLatLng = '';
-            } else if (toPlace) {
-                toLocation = toPlace.formattedAddress || toPlace.displayName || '';
-                toLatLng = toPlace.location ? `${toPlace.location.lat()},${toPlace.location.lng()}` : '';
+                finalToLocation = document.getElementById('toManual').value.trim();
+                finalToLatLng = '';
+            } else {
+                finalToLocation = toLocationText;
+                finalToLatLng = toLatLng;
             }
 
             const data = {
                 action: shouldUpdate ? 'update' : 'new',
                 firstName: firstNameVal,
                 email: emailVal,
-                fromLocation,
-                fromLatLng,
-                toLocation,
-                toLatLng,
-                distance,
+                fromLocation: finalFromLocation,
+                fromLatLng: finalFromLatLng,
+                toLocation: finalToLocation,
+                toLatLng: finalToLatLng,
+                distance: distance,
                 ip: userIP,
-                country: userCountry
+                country: userCountryName
             };
+
+            console.log('Submitting:', data);
 
             try {
                 await fetch(APPS_SCRIPT_URL, {
@@ -1197,12 +1310,12 @@
                     body: JSON.stringify(data)
                 });
 
-                // Show success
                 form.style.display = 'none';
                 successScreen.classList.add('show');
                 progressFill.style.width = '100%';
 
             } catch (err) {
+                console.error('Submit error:', err);
                 alert('Error submitting. Please try again.');
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
@@ -1213,20 +1326,22 @@
         document.getElementById('modalNew').addEventListener('click', () => {
             updateModal.classList.remove('show');
             shouldUpdate = false;
+            existingSubmission = 'checked';
             form.dispatchEvent(new Event('submit'));
         });
 
         document.getElementById('modalUpdate').addEventListener('click', () => {
             updateModal.classList.remove('show');
             shouldUpdate = true;
+            existingSubmission = 'checked';
             form.dispatchEvent(new Event('submit'));
         });
 
         // ============================================
-        // SHARE FUNCTIONS
+        // SHARE
         // ============================================
         function shareWhatsApp() {
-            const text = encodeURIComponent('Join Community Carpool! Match with neighbors on similar routes, save money and reduce emissions. Sign up here: ' + SHARE_URL);
+            const text = encodeURIComponent('Join Community Carpool! Match with neighbors on similar routes and reduce emissions together. Sign up here: ' + SHARE_URL);
             window.open('https://wa.me/?text=' + text, '_blank');
         }
 
