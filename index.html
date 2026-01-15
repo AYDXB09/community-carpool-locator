@@ -3,27 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <title>Community Carpool – Location Picker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 30px;
-      max-width: 600px;
+      padding: 32px;
+      max-width: 720px;
       margin: auto;
     }
+
     h2 {
-      margin-bottom: 20px;
+      margin-bottom: 8px;
     }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 24px;
+      margin-bottom: 6px;
+    }
+
+    .helper {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
     input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       font-size: 16px;
-      margin-bottom: 12px;
-      box-sizing: border-box;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
+
     button {
-      padding: 12px 20px;
+      margin-top: 24px;
+      padding: 14px 24px;
       font-size: 16px;
       cursor: pointer;
     }
@@ -31,52 +47,70 @@
 </head>
 
 <body>
-  <h2>Select a Location</h2>
 
+  <h2>Select Your Locations</h2>
+
+  <!-- FROM -->
+  <label for="fromInput">From (Starting Location)</label>
+  <div class="helper">
+    Search by community, building, school, office, or nearby landmark.<br>
+    Examples: <em>Saheel 2</em>, <em>Dwight School Dubai</em>, <em>Business Bay Metro</em>
+  </div>
   <input
-    id="autocomplete-from"
+    id="fromInput"
     type="text"
-    placeholder="Where are you travelling from?"
+    placeholder="Community, building, school, office, or landmark"
   />
 
+  <!-- TO -->
+  <label for="toInput">To (Destination)</label>
+  <div class="helper">
+    Enter where you usually travel to — school, workplace, community, or landmark.
+  </div>
   <input
-    id="autocomplete-to"
+    id="toInput"
     type="text"
-    placeholder="Where are you travelling to?"
+    placeholder="School, workplace, community, or landmark"
   />
 
   <button id="continueBtn">Continue</button>
 
+  <!-- GOOGLE MAPS -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&v=beta&callback=initAutocomplete"
+    async
+    defer
+  ></script>
+
   <script>
-    let autocompleteFrom;
-    let autocompleteTo;
+    let fromAutocomplete, toAutocomplete;
     let fromPlace = null;
     let toPlace = null;
 
     function initAutocomplete() {
-      const fromInput = document.getElementById("autocomplete-from");
-      const toInput = document.getElementById("autocomplete-to");
+      const fromInput = document.getElementById("fromInput");
+      const toInput = document.getElementById("toInput");
 
-      autocompleteFrom = new google.maps.places.Autocomplete(fromInput, {
+      fromAutocomplete = new google.maps.places.Autocomplete(fromInput, {
         types: ["geocode"],
       });
 
-      autocompleteTo = new google.maps.places.Autocomplete(toInput, {
+      toAutocomplete = new google.maps.places.Autocomplete(toInput, {
         types: ["geocode"],
       });
 
-      autocompleteFrom.addListener("place_changed", () => {
-        fromPlace = autocompleteFrom.getPlace();
+      fromAutocomplete.addListener("place_changed", () => {
+        fromPlace = fromAutocomplete.getPlace();
       });
 
-      autocompleteTo.addListener("place_changed", () => {
-        toPlace = autocompleteTo.getPlace();
+      toAutocomplete.addListener("place_changed", () => {
+        toPlace = toAutocomplete.getPlace();
       });
     }
 
     document.getElementById("continueBtn").addEventListener("click", () => {
-      if (!fromPlace || !toPlace || !fromPlace.geometry || !toPlace.geometry) {
-        alert("Please select both locations from the dropdown suggestions.");
+      if (!fromPlace || !fromPlace.geometry || !toPlace || !toPlace.geometry) {
+        alert("Please select both locations from the suggestions.");
         return;
       }
 
@@ -96,10 +130,5 @@
     });
   </script>
 
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&v=beta&callback=initAutocomplete"
-    async
-    defer
-  ></script>
 </body>
 </html>
