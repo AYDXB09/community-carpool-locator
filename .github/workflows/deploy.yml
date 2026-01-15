@@ -1,30 +1,37 @@
-name: Deploy site
+name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject Google Maps API key
-        run: |
-          sed -i "s|__GOOGLE_MAPS_KEY__|${{ secrets.GOOGLE_MAPS_API_KEY }}|g" index.html
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
