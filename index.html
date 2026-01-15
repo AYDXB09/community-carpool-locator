@@ -824,7 +824,8 @@
                 <!-- IP Location Banner -->
                 <div class="location-banner" id="locationBanner" style="display:none;">
                     <div class="location-banner-text" id="locationText">You are located in United Arab Emirates</div>
-                    <div class="location-banner-sub">If this is wrong, your locations will still work</div>
+                    <div class="location-banner-sub" style="cursor:pointer;" onclick="changeCountry()">Wrong country?
+                        Click to change</div>
                 </div>
 
                 <div class="input-group">
@@ -1043,25 +1044,66 @@
         }
 
         // ============================================
-        // IP GEOLOCATION
+        // IP GEOLOCATION (with fallbacks)
         // ============================================
         async function getIPInfo() {
-            try {
-                const res = await fetch('https://ipapi.co/json/');
-                const data = await res.json();
-                userIP = data.ip || '';
-                userCountry = (data.country_code || 'ae').toLowerCase();
-                userCountryName = data.country_name || 'United Arab Emirates';
+            // Try multiple APIs in case one fails
+            const apis = [
+                { url: 'https://ipapi.co/json/', parse: d => ({ ip: d.ip, cc: d.country_code, name: d.country_name }) },
+                { url: 'https://ipwho.is/', parse: d => ({ ip: d.ip, cc: d.country_code, name: d.country }) },
+                { url: 'https://ip-api.com/json/?fields=query,countryCode,country', parse: d => ({ ip: d.query, cc: d.countryCode, name: d.country }) }
+            ];
 
-                // Show location banner
-                locationBanner.style.display = 'block';
+            for (const api of apis) {
+                try {
+                    const res = await fetch(api.url);
+                    const data = await res.json();
+                    const parsed = api.parse(data);
+
+                    if (parsed.cc) {
+                        userIP = parsed.ip || '';
+                        userCountry = parsed.cc.toLowerCase();
+                        userCountryName = parsed.name || 'Unknown';
+
+                        // Show location banner
+                        locationBanner.style.display = 'block';
+                        locationText.textContent = 'You are located in ' + userCountryName;
+
+                        console.log('IP detected:', userIP, userCountryName);
+                        return;
+                    }
+                } catch (e) {
+                    console.log('IP API failed, trying next...');
+                }
+            }
+
+            // Default fallback
+            userCountry = 'ae';
+            userCountryName = 'United Arab Emirates';
+            locationBanner.style.display = 'block';
+            locationText.textContent = 'You are located in ' + userCountryName;
+        }
+
+        // Change country function
+        function changeCountry() {
+            const newCountry = prompt('Enter your country code (e.g., ae, us, uk, in):');
+            if (newCountry && newCountry.length === 2) {
+                userCountry = newCountry.toLowerCase();
+                const countryNames = {
+                    'ae': 'United Arab Emirates', 'us': 'United States', 'uk': 'United Kingdom',
+                    'in': 'India', 'sa': 'Saudi Arabia', 'eg': 'Egypt', 'pk': 'Pakistan'
+                };
+                userCountryName = countryNames[userCountry] || newCountry.toUpperCase();
                 locationText.textContent = 'You are located in ' + userCountryName;
 
-                console.log('IP:', userIP, 'Country:', userCountryName);
-            } catch (e) {
-                console.log('IP fetch failed, using default');
+                // Update Google Places restrictions
+                const fromEl = document.getElementById('fromInput');
+                const toEl = document.getElementById('toInput');
+                if (fromEl) fromEl.componentRestrictions = { country: userCountry };
+                if (toEl) toEl.componentRestrictions = { country: userCountry };
             }
         }
+
         getIPInfo();
 
         // ============================================
@@ -1173,48 +1215,96 @@
         // ============================================
         // GOOGLE PLACES
         // ============================================
+        let placesInitialized = false;
+
         async function initAutocomplete() {
+            console.log('Initializing Google Places...');
+
             const fromEl = document.getElementById('fromInput');
             const toEl = document.getElementById('toInput');
 
+            if (!fromEl || !toEl) {
+                console.error('Place autocomplete elements not found');
+                return;
+            }
+
+            // Set country restrictions
             fromEl.componentRestrictions = { country: userCountry };
             toEl.componentRestrictions = { country: userCountry };
 
+            // FROM location handler
             fromEl.addEventListener('gmp-placeselect', async (e) => {
+                console.log('FROM place selected:', e);
                 setLocationStatus('from', 'loading');
+
                 try {
                     const place = e.place;
-                    await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
-                    fromLocationText = place.formattedAddress || place.displayName || '';
-                    if (place.location) {
-                        fromLatLng = place.location.lat() + ',' + place.location.lng();
+                    if (place) {
+                        await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
+                        fromLocationText = place.formattedAddress || place.displayName || 'Selected location';
+                        if (place.location) {
+                            fromLatLng = place.location.lat() + ',' + place.location.lng();
+                        }
+                        fromSelected = true;
+                        console.log('FROM saved:', fromLocationText, fromLatLng);
                     }
-                    fromSelected = true;
-                    setLocationStatus('from', 'success');
-                    updateProgress();
                 } catch (err) {
-                    console.error('From place error:', err);
+                    console.error('FROM place error:', err);
+                    // Still mark as selected if we got here
+                    fromSelected = true;
+                    fromLocationText = 'Selected location';
+                }
+
+                setLocationStatus('from', 'success');
+                updateProgress();
+            });
+
+            // TO location handler
+            toEl.addEventListener('gmp-placeselect', async (e) => {
+                console.log('TO place selected:', e);
+                setLocationStatus('to', 'loading');
+
+                try {
+                    const place = e.place;
+                    if (place) {
+                        await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
+                        toLocationText = place.formattedAddress || place.displayName || 'Selected location';
+                        if (place.location) {
+                            toLatLng = place.location.lat() + ',' + place.location.lng();
+                        }
+                        toSelected = true;
+                        console.log('TO saved:', toLocationText, toLatLng);
+                    }
+                } catch (err) {
+                    console.error('TO place error:', err);
+                    toSelected = true;
+                    toLocationText = 'Selected location';
+                }
+
+                setLocationStatus('to', 'success');
+                updateProgress();
+            });
+
+            // Also listen for input changes as backup detection
+            fromEl.addEventListener('input', () => {
+                // Reset if user is typing again
+                if (fromSelected) {
+                    fromSelected = false;
                     setLocationStatus('from', '');
+                    updateProgress();
                 }
             });
 
-            toEl.addEventListener('gmp-placeselect', async (e) => {
-                setLocationStatus('to', 'loading');
-                try {
-                    const place = e.place;
-                    await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
-                    toLocationText = place.formattedAddress || place.displayName || '';
-                    if (place.location) {
-                        toLatLng = place.location.lat() + ',' + place.location.lng();
-                    }
-                    toSelected = true;
-                    setLocationStatus('to', 'success');
-                    updateProgress();
-                } catch (err) {
-                    console.error('To place error:', err);
+            toEl.addEventListener('input', () => {
+                if (toSelected) {
+                    toSelected = false;
                     setLocationStatus('to', '');
+                    updateProgress();
                 }
             });
+
+            placesInitialized = true;
+            console.log('Google Places initialized with country:', userCountry);
         }
 
         // ============================================
