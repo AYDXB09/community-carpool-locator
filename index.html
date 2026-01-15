@@ -1,92 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Location Picker</title>
+
   <style>
-    body { font-family: Arial, sans-serif; padding: 30px; }
-    input { width: 100%; padding: 12px; font-size: 16px; }
-    button { padding: 12px 20px; font-size: 16px; margin-top: 10px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    gmp-place-autocomplete {
+      width: 100%;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
   <h2>Select a Location</h2>
 
-  <input
-    id="autocomplete-from"
-    placeholder="Where are you travelling from?"
-  />
+  <div class="field">
+    <gmp-place-autocomplete
+      id="fromPlace"
+      placeholder="Where are you travelling from?"
+    ></gmp-place-autocomplete>
+  </div>
 
-  <input
-    id="autocomplete-to"
-    placeholder="Where are you travelling to?"
-    style="margin-top: 10px;"
-  />
+  <div class="field">
+    <gmp-place-autocomplete
+      id="toPlace"
+      placeholder="Where are you travelling to?"
+    ></gmp-place-autocomplete>
+  </div>
 
   <button id="continueBtn">Continue</button>
 
+  <!-- Google Maps JS (NEW API, REQUIRED) -->
   <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&loading=async"
-  async
-></script>
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&v=beta"
+    async
+    defer
+  ></script>
+
   <script>
-    let autocompleteFrom, autocompleteTo;
-    let fromPlace, toPlace;
+    let fromResult = null;
+    let toResult = null;
 
-    function initAutocomplete() {
-      const fromInput = document.getElementById("autocomplete-from");
-      const toInput = document.getElementById("autocomplete-to");
+    window.addEventListener("DOMContentLoaded", () => {
+      const fromEl = document.getElementById("fromPlace");
+      const toEl = document.getElementById("toPlace");
 
-      autocompleteFrom = new google.maps.places.Autocomplete(fromInput, {
-        types: ["geocode"],
+      fromEl.addEventListener("gmp-placeselect", (event) => {
+        fromResult = event.detail.place;
       });
 
-      autocompleteTo = new google.maps.places.Autocomplete(toInput, {
-        types: ["geocode"],
+      toEl.addEventListener("gmp-placeselect", (event) => {
+        toResult = event.detail.place;
       });
 
-      autocompleteFrom.addListener("place_changed", () => {
-        fromPlace = autocompleteFrom.getPlace();
-      });
-
-      autocompleteTo.addListener("place_changed", () => {
-        toPlace = autocompleteTo.getPlace();
-      });
-    }
-
-    document
-      .getElementById("continueBtn")
-      .addEventListener("click", () => {
-        if (!fromPlace || !toPlace) {
-          alert("Please select both a From and a To location.");
+      document.getElementById("continueBtn").addEventListener("click", async () => {
+        if (!fromResult || !toResult) {
+          alert("Please select both From and To locations.");
           return;
         }
 
-        const fromLat = fromPlace.geometry.location.lat();
-        const fromLng = fromPlace.geometry.location.lng();
-        const toLat = toPlace.geometry.location.lat();
-        const toLng = toPlace.geometry.location.lng();
+        const fromLocation = await fromResult.fetchFields({
+          fields: ["formattedAddress", "location"],
+        });
+
+        const toLocation = await toResult.fetchFields({
+          fields: ["formattedAddress", "location"],
+        });
+
+        const fromLat = fromLocation.location.lat();
+        const fromLng = fromLocation.location.lng();
+        const toLat = toLocation.location.lat();
+        const toLng = toLocation.location.lng();
 
         const tallyUrl =
           "https://tally.so/r/eqDG0e" +
-          `?MasterCommunityArea=${encodeURIComponent(
-            fromPlace.formatted_address
-          )}&GooglePinFrom=${fromLat},${fromLng}` +
-          `&MasterCommunityArea2=${encodeURIComponent(
-            toPlace.formatted_address
-          )}&GooglePinTo=${toLat},${toLng}`;
+          `?MasterCommunityArea=${encodeURIComponent(fromLocation.formattedAddress)}` +
+          `&GooglePinFrom=${fromLat},${fromLng}` +
+          `&MasterCommunityArea2=${encodeURIComponent(toLocation.formattedAddress)}` +
+          `&GooglePinTo=${toLat},${toLng}`;
 
         window.location.href = tallyUrl;
       });
-
-    window.initAutocomplete = initAutocomplete;
+    });
   </script>
 
-  <script>
-    if (typeof google !== "undefined") {
-      initAutocomplete();
-    }
-  </script>
 </body>
 </html>
