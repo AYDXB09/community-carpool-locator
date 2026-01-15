@@ -3,34 +3,26 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Community Carpool | Share Rides. Cut Emissions.</title>
-    <meta name="description"
-        content="A community-driven platform that matches people already travelling similar routes to carpool voluntarily." />
-
+    <meta name="description" content="Match with people on similar routes to carpool voluntarily." />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #10b981;
-            --primary-light: #34d399;
-            --primary-dark: #059669;
-            --bg: #ffffff;
-            --bg-secondary: #f8fafc;
-            --card-bg: #ffffff;
-            --border: #e2e8f0;
-            --border-focus: #10b981;
-            --text: #0f172a;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --error: #ef4444;
-            --success: #10b981;
+            --primary: #16a34a;
+            --primary-light: #22c55e;
+            --primary-dark: #15803d;
+            --bg: #fafafa;
+            --card: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --error: #dc2626;
+            --success: #16a34a;
             --radius: 12px;
-            --radius-lg: 16px;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -44,168 +36,223 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-secondary);
-            min-height: 100vh;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
             color: var(--text);
-            line-height: 1.6;
-        }
-
-        /* Page Layout */
-        .page {
+            line-height: 1.5;
             min-height: 100vh;
-            padding: 24px 16px 48px;
         }
 
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
+        /* ========== PROGRESS BAR (Fixed Top) ========== */
+        .progress-bar-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.05);
+            z-index: 1000;
         }
 
-        /* Header */
-        .header {
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* ========== TUTORIAL OVERLAY ========== */
+        .tutorial-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .tutorial-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .tutorial-container {
+            max-width: 400px;
+            width: 90%;
             text-align: center;
-            margin-bottom: 32px;
-            animation: fadeIn 0.6s ease;
+            color: white;
         }
 
-        .logo {
-            max-width: 240px;
-            width: 100%;
-            height: auto;
+        .tutorial-slide {
+            display: none;
+            animation: fadeSlide 0.5s ease;
+        }
+
+        .tutorial-slide.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tutorial-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .tutorial-title {
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 16px;
         }
 
+        .tutorial-text {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .tutorial-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .tutorial-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .tutorial-dot.active {
+            background: var(--primary-light);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .tutorial-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 48px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tutorial-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .tutorial-skip {
+            display: block;
+            margin-top: 16px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .tutorial-skip:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ========== MAIN PAGE ========== */
+        .page {
+            padding: 24px 16px 60px;
+            max-width: 480px;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            max-width: 200px;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
         .tagline {
-            font-size: 1.5rem;
+            font-size: 20px;
             font-weight: 700;
             color: var(--primary-dark);
             margin-bottom: 8px;
         }
 
         .description {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            background: var(--card-bg);
-            border-radius: var(--radius-lg);
-            padding: 20px 24px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-            animation: slideUp 0.5s ease;
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .progress-label {
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 14px;
             color: var(--text-secondary);
         }
 
-        .progress-percent {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: var(--bg-secondary);
-            border-radius: 100px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-            border-radius: 100px;
-            width: 0%;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 12px;
-        }
-
-        .step-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .step-dot.active {
-            background: var(--primary);
-            transform: scale(1.2);
-        }
-
-        .step-dot.completed {
-            background: var(--primary);
-        }
-
-        /* Form Card */
+        /* ========== FORM ========== */
         .form-card {
-            background: var(--card-bg);
-            border-radius: var(--radius-lg);
-            padding: 28px 24px;
-            box-shadow: var(--shadow);
-            animation: slideUp 0.6s ease 0.1s both;
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        /* Sections */
         .section {
             margin-bottom: 28px;
-            padding-bottom: 28px;
-            border-bottom: 1px solid var(--border);
         }
 
         .section:last-of-type {
-            border-bottom: none;
             margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .section-number {
-            width: 28px;
-            height: 28px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 600;
-            flex-shrink: 0;
         }
 
         .section-title {
-            font-size: 1rem;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Input Groups */
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+
+        /* ========== INPUTS ========== */
         .input-group {
             margin-bottom: 16px;
         }
@@ -216,43 +263,30 @@
 
         .label {
             display: block;
-            font-size: 0.875rem;
+            font-size: 14px;
             font-weight: 500;
-            color: var(--text);
             margin-bottom: 6px;
         }
 
-        .label .required {
+        .label .req {
             color: var(--error);
         }
 
-        .helper {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        /* Inputs */
         .input {
             width: 100%;
-            padding: 12px 16px;
-            font-size: 1rem;
+            padding: 12px 14px;
+            font-size: 16px;
             font-family: inherit;
-            background: var(--bg-secondary);
-            border: 2px solid transparent;
-            border-radius: var(--radius);
-            color: var(--text);
-            transition: all 0.2s ease;
-        }
-
-        .input::placeholder {
-            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            transition: all 0.2s;
         }
 
         .input:focus {
             outline: none;
-            border-color: var(--border-focus);
-            background: var(--bg);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
         }
 
         .input.error {
@@ -263,45 +297,76 @@
             border-color: var(--success);
         }
 
-        .error-text {
-            font-size: 0.8rem;
+        .error-msg {
             color: var(--error);
+            font-size: 13px;
             margin-top: 6px;
             display: none;
         }
 
-        .error-text.show {
+        .error-msg.show {
             display: block;
-            animation: shake 0.4s ease;
         }
 
-        /* Place Autocomplete */
+        .helper {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        /* ========== LOCATION INPUT ========== */
+        .location-wrapper {
+            position: relative;
+        }
+
+        .location-status {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+
+        .location-status svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .location-status .loading {
+            animation: spin 1s linear infinite;
+            color: var(--text-muted);
+        }
+
+        .location-status .success {
+            color: var(--success);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         gmp-place-autocomplete {
             display: block;
             width: 100%;
-            --gmp-place-autocomplete-input-padding: 12px 16px;
+            --gmp-place-autocomplete-input-padding: 12px 40px 12px 14px;
             --gmp-place-autocomplete-input-font-size: 16px;
-            --gmp-place-autocomplete-input-border-radius: 12px;
+            --gmp-place-autocomplete-input-border-radius: 8px;
         }
 
         .manual-link {
-            display: inline-block;
-            font-size: 0.8rem;
+            font-size: 13px;
             color: var(--primary);
-            margin-top: 8px;
             cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .manual-link:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
+            margin-top: 8px;
+            display: inline-block;
         }
 
         .manual-wrapper {
             display: none;
             margin-top: 12px;
-            animation: fadeIn 0.3s ease;
         }
 
         .manual-wrapper.show {
@@ -309,36 +374,14 @@
         }
 
         .back-link {
-            display: inline-block;
-            font-size: 0.8rem;
+            font-size: 13px;
             color: var(--text-muted);
-            margin-top: 6px;
             cursor: pointer;
+            margin-top: 6px;
+            display: inline-block;
         }
 
-        .back-link:hover {
-            color: var(--text-secondary);
-        }
-
-        .location-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--primary-dark);
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-top: 8px;
-        }
-
-        .location-tag.manual {
-            background: rgba(251, 191, 36, 0.1);
-            color: #b45309;
-        }
-
-        /* Distance Options */
+        /* ========== DISTANCE OPTIONS ========== */
         .distance-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -355,16 +398,14 @@
         }
 
         .distance-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px 12px;
-            background: var(--bg-secondary);
-            border: 2px solid transparent;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: all 0.2s ease;
+            display: block;
+            padding: 14px;
             text-align: center;
+            background: var(--bg);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
         .distance-card:hover {
@@ -373,55 +414,35 @@
 
         .distance-option input:checked+.distance-card {
             border-color: var(--primary);
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .distance-badge {
-            width: 32px;
-            height: 32px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
+            background: rgba(22, 163, 74, 0.05);
         }
 
         .distance-name {
-            font-weight: 500;
-            font-size: 0.875rem;
-            color: var(--text);
+            font-weight: 600;
+            font-size: 14px;
             margin-bottom: 2px;
         }
 
         .distance-range {
-            font-size: 0.75rem;
+            font-size: 12px;
             color: var(--text-muted);
         }
 
-        /* Submit Button */
+        /* ========== SUBMIT BUTTON ========== */
         .submit-btn {
             width: 100%;
-            padding: 16px 24px;
-            font-size: 1rem;
+            padding: 14px;
+            font-size: 16px;
             font-weight: 600;
             font-family: inherit;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: var(--radius);
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 24px;
+            margin-top: 20px;
+            transition: all 0.2s;
             position: relative;
-            overflow: hidden;
         }
 
         .submit-btn:disabled {
@@ -431,11 +452,6 @@
 
         .submit-btn:not(:disabled):hover {
             background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .submit-btn:not(:disabled):active {
-            transform: translateY(0);
         }
 
         .submit-btn .spinner {
@@ -446,156 +462,208 @@
             border-top-color: white;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        .submit-btn.loading .btn-content {
+        .submit-btn.loading .btn-text {
             opacity: 0;
         }
 
         .submit-btn.loading .spinner {
             display: block;
-            position: absolute;
         }
 
-        /* Footer */
-        .footer {
+        /* ========== SUCCESS SCREEN ========== */
+        .success-screen {
+            display: none;
             text-align: center;
-            padding: 24px 16px;
-            animation: fadeIn 0.6s ease 0.2s both;
+            padding: 40px 20px;
         }
 
-        .disclaimer {
-            font-size: 0.8rem;
-            color: var(--text-muted);
+        .success-screen.show {
+            display: block;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 12px;
+        }
+
+        .success-text {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
             line-height: 1.6;
         }
 
-        .contact-link {
+        .share-section {
+            background: #fef3c7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .share-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 12px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .share-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .share-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .share-btn.copy {
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+
+        .another-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* ========== UPDATE MODAL ========== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+
+        .modal-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-btn.secondary {
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer a {
             color: var(--primary);
             text-decoration: none;
-            font-weight: 500;
         }
 
-        .contact-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            75% {
-                transform: translateX(5px);
-            }
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 400px) {
             .page {
                 padding: 16px 12px 40px;
             }
 
-            .header {
-                margin-bottom: 24px;
-            }
-
-            .logo {
-                max-width: 180px;
-            }
-
-            .tagline {
-                font-size: 1.25rem;
-            }
-
-            .description {
-                font-size: 0.875rem;
-            }
-
-            .progress-container,
-            .form-card {
-                padding: 20px 18px;
-            }
-
-            .distance-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .distance-card {
-                flex-direction: row;
-                justify-content: flex-start;
-                gap: 12px;
-                text-align: left;
-            }
-
-            .distance-badge {
-                margin-bottom: 0;
-            }
-        }
-
-        @media (max-width: 360px) {
             .logo {
                 max-width: 160px;
             }
 
             .tagline {
-                font-size: 1.1rem;
+                font-size: 18px;
             }
 
             .form-card {
-                padding: 16px 14px;
+                padding: 20px 16px;
+            }
+
+            .distance-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        /* Touch devices */
         @media (hover: none) {
 
             .input,
@@ -604,205 +672,246 @@
                 min-height: 48px;
             }
         }
-
-        /* Safe areas */
-        @supports (padding: env(safe-area-inset-bottom)) {
-            .page {
-                padding-bottom: calc(48px + env(safe-area-inset-bottom));
-            }
-        }
-
-        /* Reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
     </style>
 </head>
 
 <body>
-    <div class="page">
-        <div class="container">
-            <!-- Header -->
-            <header class="header">
-                <img src="Community_Carpool_Logo.png" alt="Community Carpool" class="logo" />
-                <h1 class="tagline">Share rides. Cut emissions.</h1>
-                <p class="description">
-                    Match with people on similar routes. Contact details shared only after a match.
-                </p>
-            </header>
+    <!-- Progress Bar -->
+    <div class="progress-bar-fixed">
+        <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
 
-            <!-- Progress Bar -->
-            <div class="progress-container">
-                <div class="progress-header">
-                    <span class="progress-label">Your progress</span>
-                    <span class="progress-percent" id="progressPercent">0%</span>
+    <!-- Tutorial Overlay -->
+    <div class="tutorial-overlay" id="tutorial">
+        <div class="tutorial-container">
+            <div class="tutorial-slide active" data-slide="1">
+                <div class="tutorial-icon">🚗</div>
+                <h2 class="tutorial-title">Welcome to Community Carpool</h2>
+                <p class="tutorial-text">We match you with neighbors heading the same direction. Save money, reduce
+                    emissions, and make new connections!</p>
+            </div>
+            <div class="tutorial-slide" data-slide="2">
+                <div class="tutorial-icon">📍</div>
+                <h2 class="tutorial-title">Tell Us Your Route</h2>
+                <p class="tutorial-text">Enter where you start and where you are going. We use approximate locations
+                    only, your exact address is never shared.</p>
+            </div>
+            <div class="tutorial-slide" data-slide="3">
+                <div class="tutorial-icon">📧</div>
+                <h2 class="tutorial-title">What Happens Next?</h2>
+                <p class="tutorial-text">First, you will receive an email with your estimated carbon footprint. When we
+                    find a match, both parties get notified to coordinate.</p>
+            </div>
+            <div class="tutorial-slide" data-slide="4">
+                <div class="tutorial-icon">🤝</div>
+                <h2 class="tutorial-title">Share for Better Matches</h2>
+                <p class="tutorial-text">The more people join from your area, the faster you get matched! Share with
+                    neighbors and colleagues after signing up.</p>
+            </div>
+            <div class="tutorial-dots">
+                <span class="tutorial-dot active" data-dot="1"></span>
+                <span class="tutorial-dot" data-dot="2"></span>
+                <span class="tutorial-dot" data-dot="3"></span>
+                <span class="tutorial-dot" data-dot="4"></span>
+            </div>
+            <button class="tutorial-btn" id="tutorialNext">Next</button>
+            <button class="tutorial-skip" id="tutorialSkip">Skip tutorial</button>
+        </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div class="modal-overlay" id="updateModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Welcome Back!</h3>
+            <p class="modal-text">We found an existing submission with this email. Would you like to update your
+                previous entry or create a new one?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" id="modalNew">Create New</button>
+                <button class="modal-btn primary" id="modalUpdate">Update Previous</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Page -->
+    <div class="page">
+        <header class="header">
+            <img src="Community_Carpool_Logo.png" alt="Community Carpool" class="logo" />
+            <h1 class="tagline">Share rides. Cut emissions.</h1>
+            <p class="description">Match with people on similar routes. Contact shared only after a match.</p>
+        </header>
+
+        <!-- Form -->
+        <form id="form" class="form-card">
+            <!-- Details -->
+            <div class="section">
+                <h2 class="section-title">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Your Details
+                </h2>
+                <div class="input-group">
+                    <label class="label">First Name</label>
+                    <input type="text" id="firstName" class="input" placeholder="Your first name" />
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="progress-steps">
-                    <span class="step-dot" id="step1"></span>
-                    <span class="step-dot" id="step2"></span>
-                    <span class="step-dot" id="step3"></span>
-                    <span class="step-dot" id="step4"></span>
+                <div class="input-group">
+                    <label class="label">Email <span class="req">*</span></label>
+                    <input type="email" id="email" class="input" placeholder="you@example.com" />
+                    <p id="emailError" class="error-msg">Please enter a valid email with @</p>
                 </div>
             </div>
 
-            <!-- Form -->
-            <form id="form" class="form-card">
-                <!-- Section 1: Details -->
-                <div class="section" id="section1">
-                    <div class="section-header">
-                        <span class="section-number">1</span>
-                        <h2 class="section-title">Your details</h2>
+            <!-- From Location -->
+            <div class="section">
+                <h2 class="section-title">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Starting Location
+                </h2>
+                <div class="input-group">
+                    <p class="helper">Search or enter manually</p>
+                    <div class="location-wrapper" id="fromWrapper">
+                        <gmp-place-autocomplete id="fromInput" placeholder="Search your area"></gmp-place-autocomplete>
+                        <div class="location-status" id="fromStatus"></div>
                     </div>
-
-                    <div class="input-group">
-                        <label class="label" for="firstName">First name</label>
-                        <input type="text" id="firstName" class="input" placeholder="Enter your first name" />
-                    </div>
-
-                    <div class="input-group">
-                        <label class="label" for="email">Email <span class="required">*</span></label>
-                        <input type="email" id="email" class="input" placeholder="you@example.com" />
-                        <p id="emailError" class="error-text">Please enter a valid email with @</p>
-                    </div>
-                </div>
-
-                <!-- Section 2: From -->
-                <div class="section" id="section2">
-                    <div class="section-header">
-                        <span class="section-number">2</span>
-                        <h2 class="section-title">Starting location</h2>
-                    </div>
-
-                    <div class="input-group">
-                        <label class="label">Where are you coming from?</label>
-                        <p class="helper">Search for a place or enter manually</p>
-                        <div id="fromSearchWrapper">
-                            <gmp-place-autocomplete id="fromInput"
-                                placeholder="Search location"></gmp-place-autocomplete>
-                            <span class="manual-link" id="fromManualBtn">Can't find it? Enter manually</span>
-                            <div id="fromTag"></div>
-                        </div>
-                        <div class="manual-wrapper" id="fromManualWrapper">
-                            <input type="text" id="fromManual" class="input" placeholder="Type your location" />
-                            <span class="back-link" id="fromBackBtn">Back to search</span>
-                        </div>
+                    <span class="manual-link" id="fromManualBtn">Cannot find it? Enter manually</span>
+                    <div class="manual-wrapper" id="fromManualWrapper">
+                        <input type="text" id="fromManual" class="input" placeholder="Type your location" />
+                        <span class="back-link" id="fromBackBtn">Back to search</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Section 3: To -->
-                <div class="section" id="section3">
-                    <div class="section-header">
-                        <span class="section-number">3</span>
-                        <h2 class="section-title">Destination</h2>
+            <!-- To Location -->
+            <div class="section">
+                <h2 class="section-title">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                    </svg>
+                    Destination
+                </h2>
+                <div class="input-group">
+                    <p class="helper">Where are you heading?</p>
+                    <div class="location-wrapper" id="toWrapper">
+                        <gmp-place-autocomplete id="toInput" placeholder="Search destination"></gmp-place-autocomplete>
+                        <div class="location-status" id="toStatus"></div>
                     </div>
-
-                    <div class="input-group">
-                        <label class="label">Where are you going?</label>
-                        <p class="helper">Select from search or enter manually</p>
-                        <div id="toSearchWrapper">
-                            <gmp-place-autocomplete id="toInput"
-                                placeholder="Search destination"></gmp-place-autocomplete>
-                            <span class="manual-link" id="toManualBtn">Can't find it? Enter manually</span>
-                            <div id="toTag"></div>
-                        </div>
-                        <div class="manual-wrapper" id="toManualWrapper">
-                            <input type="text" id="toManual" class="input" placeholder="Type your destination" />
-                            <span class="back-link" id="toBackBtn">Back to search</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 4: Distance -->
-                <div class="section" id="section4">
-                    <div class="section-header">
-                        <span class="section-number">4</span>
-                        <h2 class="section-title">Match distance</h2>
-                    </div>
-
-                    <div class="distance-grid">
-                        <div class="distance-option">
-                            <input type="radio" id="distA" name="distance" value="0-1" />
-                            <label class="distance-card" for="distA">
-                                <span class="distance-badge">A</span>
-                                <div>
-                                    <div class="distance-name">Very close</div>
-                                    <div class="distance-range">0 to 1 km</div>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="distance-option">
-                            <input type="radio" id="distB" name="distance" value="1-3" checked />
-                            <label class="distance-card" for="distB">
-                                <span class="distance-badge">B</span>
-                                <div>
-                                    <div class="distance-name">Nearby</div>
-                                    <div class="distance-range">1 to 3 km</div>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="distance-option">
-                            <input type="radio" id="distC" name="distance" value="3-5" />
-                            <label class="distance-card" for="distC">
-                                <span class="distance-badge">C</span>
-                                <div>
-                                    <div class="distance-name">Local area</div>
-                                    <div class="distance-range">3 to 5 km</div>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="distance-option">
-                            <input type="radio" id="distD" name="distance" value="5-8" />
-                            <label class="distance-card" for="distD">
-                                <span class="distance-badge">D</span>
-                                <div>
-                                    <div class="distance-name">Flexible</div>
-                                    <div class="distance-range">5 to 8 km</div>
-                                </div>
-                            </label>
-                        </div>
+                    <span class="manual-link" id="toManualBtn">Cannot find it? Enter manually</span>
+                    <div class="manual-wrapper" id="toManualWrapper">
+                        <input type="text" id="toManual" class="input" placeholder="Type your destination" />
+                        <span class="back-link" id="toBackBtn">Back to search</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Submit -->
-                <button type="submit" id="submitBtn" class="submit-btn" disabled>
-                    <span class="btn-content">Continue</span>
-                    <span class="spinner"></span>
-                </button>
-            </form>
+            <!-- Distance -->
+            <div class="section">
+                <h2 class="section-title">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    Match Distance
+                </h2>
+                <div class="distance-grid">
+                    <div class="distance-option">
+                        <input type="radio" id="dist1" name="distance" value="0-1" />
+                        <label class="distance-card" for="dist1">
+                            <div class="distance-name">Very Close</div>
+                            <div class="distance-range">0 to 1 km</div>
+                        </label>
+                    </div>
+                    <div class="distance-option">
+                        <input type="radio" id="dist2" name="distance" value="1-3" checked />
+                        <label class="distance-card" for="dist2">
+                            <div class="distance-name">Nearby</div>
+                            <div class="distance-range">1 to 3 km</div>
+                        </label>
+                    </div>
+                    <div class="distance-option">
+                        <input type="radio" id="dist3" name="distance" value="3-5" />
+                        <label class="distance-card" for="dist3">
+                            <div class="distance-name">Local Area</div>
+                            <div class="distance-range">3 to 5 km</div>
+                        </label>
+                    </div>
+                    <div class="distance-option">
+                        <input type="radio" id="dist4" name="distance" value="5-8" />
+                        <label class="distance-card" for="dist4">
+                            <div class="distance-name">Flexible</div>
+                            <div class="distance-range">5 to 8 km</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
 
-            <!-- Footer -->
-            <footer class="footer">
-                <p class="disclaimer">
-                    We don't provide transport services. All arrangements are private and voluntary.
-                    <br />
-                    Questions? <a href="https://tally.so/r/Xxoqxz" class="contact-link" target="_blank">Contact us</a>
-                </p>
-            </footer>
+            <button type="submit" id="submitBtn" class="submit-btn" disabled>
+                <span class="btn-text">Continue</span>
+                <span class="spinner"></span>
+            </button>
+        </form>
+
+        <!-- Success Screen -->
+        <div class="success-screen" id="successScreen">
+            <div class="success-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 class="success-title">You are registered!</h2>
+            <p class="success-text">
+                Check your email for your carbon footprint estimate.<br>
+                We will notify you when we find a match for your route.
+            </p>
+            <div class="share-section">
+                <div class="share-title">🚀 Get matched faster by sharing!</div>
+                <div class="share-buttons">
+                    <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                        </svg>
+                        WhatsApp
+                    </button>
+                    <button class="share-btn copy" onclick="copyLink()">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy Link
+                    </button>
+                </div>
+            </div>
+            <button class="another-btn" onclick="location.reload()">Submit Another</button>
         </div>
+
+        <footer class="footer">
+            We do not provide transport. All arrangements are private.<br>
+            <a href="https://tally.so/r/Xxoqxz" target="_blank">Questions? Contact us</a>
+        </footer>
     </div>
 
     <script>
         // ============================================
-        // CONFIGURATION
+        // CONFIG
         // ============================================
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby24zyVTnO81DATvp3iXnJc8uCXuizK-rv6ZOrmvEgtw7LGdwkK0ExPCSWaVRm09UujyQ/exec';
+        const SHARE_URL = 'https://aydxb09.github.io/community-carpool/';
 
         // ============================================
         // STATE
         // ============================================
-        let fromPlace = null;
-        let toPlace = null;
-        let isFromManual = false;
-        let isToManual = false;
+        let fromPlace = null, toPlace = null;
+        let isFromManual = false, isToManual = false;
+        let userIP = '', userCountry = 'ae';
+        let existingSubmission = null;
+        let shouldUpdate = false;
 
         // ============================================
         // DOM
@@ -813,23 +922,62 @@
         const emailError = document.getElementById('emailError');
         const submitBtn = document.getElementById('submitBtn');
         const progressFill = document.getElementById('progressFill');
-        const progressPercent = document.getElementById('progressPercent');
+        const successScreen = document.getElementById('successScreen');
+        const updateModal = document.getElementById('updateModal');
 
-        // From elements
-        const fromSearchWrapper = document.getElementById('fromSearchWrapper');
-        const fromManualWrapper = document.getElementById('fromManualWrapper');
-        const fromManual = document.getElementById('fromManual');
-        const fromManualBtn = document.getElementById('fromManualBtn');
-        const fromBackBtn = document.getElementById('fromBackBtn');
-        const fromTag = document.getElementById('fromTag');
+        // ============================================
+        // TUTORIAL
+        // ============================================
+        let currentSlide = 1;
+        const totalSlides = 4;
+        const tutorial = document.getElementById('tutorial');
+        const tutorialNext = document.getElementById('tutorialNext');
+        const tutorialSkip = document.getElementById('tutorialSkip');
 
-        // To elements
-        const toSearchWrapper = document.getElementById('toSearchWrapper');
-        const toManualWrapper = document.getElementById('toManualWrapper');
-        const toManual = document.getElementById('toManual');
-        const toManualBtn = document.getElementById('toManualBtn');
-        const toBackBtn = document.getElementById('toBackBtn');
-        const toTag = document.getElementById('toTag');
+        function showSlide(n) {
+            document.querySelectorAll('.tutorial-slide').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tutorial-dot').forEach(d => d.classList.remove('active'));
+            document.querySelector(`.tutorial-slide[data-slide="${n}"]`).classList.add('active');
+            document.querySelector(`.tutorial-dot[data-dot="${n}"]`).classList.add('active');
+            tutorialNext.textContent = n === totalSlides ? 'Get Started' : 'Next';
+        }
+
+        tutorialNext.addEventListener('click', () => {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            } else {
+                closeTutorial();
+            }
+        });
+
+        tutorialSkip.addEventListener('click', closeTutorial);
+
+        function closeTutorial() {
+            tutorial.classList.add('hidden');
+            localStorage.setItem('tutorialSeen', 'true');
+        }
+
+        // Check if tutorial was seen
+        if (localStorage.getItem('tutorialSeen')) {
+            tutorial.classList.add('hidden');
+        }
+
+        // ============================================
+        // IP GEOLOCATION
+        // ============================================
+        async function getIPInfo() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                userIP = data.ip || '';
+                userCountry = (data.country_code || 'ae').toLowerCase();
+                console.log('IP:', userIP, 'Country:', userCountry);
+            } catch (e) {
+                console.log('IP fetch failed, using default');
+            }
+        }
+        getIPInfo();
 
         // ============================================
         // PROGRESS BAR
@@ -838,56 +986,37 @@
             let completed = 0;
             const total = 4;
 
-            // Step 1: Name and email
-            const hasName = firstName.value.trim().length > 0;
-            const hasEmail = email.value.includes('@') && email.value.includes('.');
-            if (hasName && hasEmail) completed++;
-            document.getElementById('step1').classList.toggle('completed', hasName && hasEmail);
-            document.getElementById('step1').classList.toggle('active', hasName || hasEmail);
+            if (firstName.value.trim() && email.value.includes('@')) completed++;
+            if (fromPlace || (isFromManual && document.getElementById('fromManual').value.trim())) completed++;
+            if (toPlace || (isToManual && document.getElementById('toManual').value.trim())) completed++;
+            completed++; // Distance always selected
 
-            // Step 2: From location
-            const hasFrom = fromPlace || (isFromManual && fromManual.value.trim());
-            if (hasFrom) completed++;
-            document.getElementById('step2').classList.toggle('completed', hasFrom);
-            document.getElementById('step2').classList.toggle('active', !hasFrom && (hasName || hasEmail));
-
-            // Step 3: To location
-            const hasTo = toPlace || (isToManual && toManual.value.trim());
-            if (hasTo) completed++;
-            document.getElementById('step3').classList.toggle('completed', hasTo);
-            document.getElementById('step3').classList.toggle('active', !hasTo && hasFrom);
-
-            // Step 4: Distance (always completed since we have a default)
-            completed++;
-            document.getElementById('step4').classList.add('completed');
-
-            const percent = Math.round((completed / total) * 100);
+            const percent = (completed / total) * 100;
             progressFill.style.width = percent + '%';
-            progressPercent.textContent = percent + '%';
 
-            // Enable submit if all required fields are filled
-            const isValid = hasName && hasEmail && hasFrom && hasTo;
-            submitBtn.disabled = !isValid;
+            // Enable submit
+            const hasFrom = fromPlace || (isFromManual && document.getElementById('fromManual').value.trim());
+            const hasTo = toPlace || (isToManual && document.getElementById('toManual').value.trim());
+            const valid = firstName.value.trim() && email.value.includes('@') && hasFrom && hasTo;
+            submitBtn.disabled = !valid;
         }
 
         // ============================================
         // EMAIL VALIDATION
         // ============================================
-        function validateEmail(value) {
-            return value.includes('@') && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        function validateEmail(v) {
+            return v.includes('@') && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
         }
 
         email.addEventListener('blur', () => {
-            const value = email.value.trim();
-            if (value && !validateEmail(value)) {
+            const v = email.value.trim();
+            if (v && !validateEmail(v)) {
                 emailError.classList.add('show');
                 email.classList.add('error');
             } else {
                 emailError.classList.remove('show');
                 email.classList.remove('error');
-                if (value && validateEmail(value)) {
-                    email.classList.add('success');
-                }
+                if (v) email.classList.add('success');
             }
             updateProgress();
         });
@@ -901,58 +1030,53 @@
         firstName.addEventListener('input', updateProgress);
 
         // ============================================
+        // LOCATION STATUS ICONS
+        // ============================================
+        function setLocationStatus(type, status) {
+            const el = document.getElementById(type + 'Status');
+            if (status === 'loading') {
+                el.innerHTML = '<svg class="loading" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
+            } else if (status === 'success') {
+                el.innerHTML = '<svg class="success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+            } else {
+                el.innerHTML = '';
+            }
+        }
+
+        // ============================================
         // MANUAL LOCATION TOGGLE
         // ============================================
-        function setupLocationToggle(type) {
-            const searchWrapper = type === 'from' ? fromSearchWrapper : toSearchWrapper;
-            const manualWrapper = type === 'from' ? fromManualWrapper : toManualWrapper;
-            const manualInput = type === 'from' ? fromManual : toManual;
-            const manualBtn = type === 'from' ? fromManualBtn : toManualBtn;
-            const backBtn = type === 'from' ? fromBackBtn : toBackBtn;
-            const tag = type === 'from' ? fromTag : toTag;
+        function setupManual(type) {
+            const manualBtn = document.getElementById(type + 'ManualBtn');
+            const manualWrapper = document.getElementById(type + 'ManualWrapper');
+            const manualInput = document.getElementById(type + 'Manual');
+            const backBtn = document.getElementById(type + 'BackBtn');
+            const wrapper = document.getElementById(type + 'Wrapper');
 
             manualBtn.addEventListener('click', () => {
-                searchWrapper.style.display = 'none';
+                wrapper.style.display = 'none';
                 manualWrapper.classList.add('show');
                 manualInput.focus();
-                if (type === 'from') {
-                    isFromManual = true;
-                    fromPlace = null;
-                } else {
-                    isToManual = true;
-                    toPlace = null;
-                }
-                tag.innerHTML = '';
+                if (type === 'from') { isFromManual = true; fromPlace = null; }
+                else { isToManual = true; toPlace = null; }
+                setLocationStatus(type, '');
                 updateProgress();
             });
 
             backBtn.addEventListener('click', () => {
-                searchWrapper.style.display = 'block';
+                wrapper.style.display = 'block';
                 manualWrapper.classList.remove('show');
                 manualInput.value = '';
-                if (type === 'from') {
-                    isFromManual = false;
-                } else {
-                    isToManual = false;
-                }
+                if (type === 'from') isFromManual = false;
+                else isToManual = false;
                 updateProgress();
             });
 
             manualInput.addEventListener('input', updateProgress);
         }
 
-        setupLocationToggle('from');
-        setupLocationToggle('to');
-
-        // ============================================
-        // LOCATION TAG
-        // ============================================
-        function showTag(type, name, source) {
-            const tag = type === 'from' ? fromTag : toTag;
-            const icon = source === 'google' ? '📍' : '✏️';
-            const className = source === 'manual' ? 'location-tag manual' : 'location-tag';
-            tag.innerHTML = `<span class="${className}">${icon} ${name.substring(0, 35)}${name.length > 35 ? '...' : ''}</span>`;
-        }
+        setupManual('from');
+        setupManual('to');
 
         // ============================================
         // GOOGLE PLACES
@@ -961,22 +1085,44 @@
             const fromEl = document.getElementById('fromInput');
             const toEl = document.getElementById('toInput');
 
-            fromEl.componentRestrictions = { country: 'ae' };
-            toEl.componentRestrictions = { country: 'ae' };
+            // Set country restriction based on IP
+            fromEl.componentRestrictions = { country: userCountry };
+            toEl.componentRestrictions = { country: userCountry };
             fromEl.types = ['establishment', 'geocode'];
             toEl.types = ['establishment', 'geocode'];
 
-            fromEl.addEventListener('gmp-placeselect', (e) => {
+            fromEl.addEventListener('gmp-placeselect', async (e) => {
+                setLocationStatus('from', 'loading');
                 fromPlace = e.place;
-                showTag('from', fromPlace.displayName || 'Selected', 'google');
+                await fromPlace.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
+                setLocationStatus('from', 'success');
                 updateProgress();
             });
 
-            toEl.addEventListener('gmp-placeselect', (e) => {
+            toEl.addEventListener('gmp-placeselect', async (e) => {
+                setLocationStatus('to', 'loading');
                 toPlace = e.place;
-                showTag('to', toPlace.displayName || 'Selected', 'google');
+                await toPlace.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
+                setLocationStatus('to', 'success');
                 updateProgress();
             });
+        }
+
+        // ============================================
+        // CHECK DUPLICATE
+        // ============================================
+        async function checkDuplicate(emailVal) {
+            try {
+                const res = await fetch(APPS_SCRIPT_URL + '?action=check&email=' + encodeURIComponent(emailVal) + '&ip=' + encodeURIComponent(userIP));
+                const data = await res.json();
+                if (data.exists) {
+                    existingSubmission = data.row;
+                    return true;
+                }
+            } catch (e) {
+                console.log('Duplicate check failed');
+            }
+            return false;
         }
 
         // ============================================
@@ -996,46 +1142,54 @@
                 return;
             }
 
-            // Get locations
-            let fromLocation = '', fromLatLng = '', fromSource = '';
-            let toLocation = '', toLatLng = '', toSource = '';
-
-            if (isFromManual) {
-                fromLocation = fromManual.value.trim();
-                fromLatLng = 'manual';
-                fromSource = 'manual';
-            } else if (fromPlace) {
-                await fromPlace.fetchFields({ fields: ['formattedAddress', 'location'] });
-                fromLocation = fromPlace.formattedAddress || '';
-                fromLatLng = `${fromPlace.location.lat()},${fromPlace.location.lng()}`;
-                fromSource = 'google';
-            }
-
-            if (isToManual) {
-                toLocation = toManual.value.trim();
-                toLatLng = 'manual';
-                toSource = 'manual';
-            } else if (toPlace) {
-                await toPlace.fetchFields({ fields: ['formattedAddress', 'location'] });
-                toLocation = toPlace.formattedAddress || '';
-                toLatLng = `${toPlace.location.lat()},${toPlace.location.lng()}`;
-                toSource = 'google';
-            }
-
-            // Loading state
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
+            // Check for duplicate
+            if (!shouldUpdate) {
+                const exists = await checkDuplicate(emailVal);
+                if (exists) {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    updateModal.classList.add('show');
+                    return;
+                }
+            }
+
+            // Get location data
+            let fromLocation = '', fromLatLng = '';
+            let toLocation = '', toLatLng = '';
+
+            if (isFromManual) {
+                fromLocation = document.getElementById('fromManual').value.trim();
+                fromLatLng = '';
+            } else if (fromPlace) {
+                fromLocation = fromPlace.formattedAddress || fromPlace.displayName || '';
+                fromLatLng = fromPlace.location ? `${fromPlace.location.lat()},${fromPlace.location.lng()}` : '';
+            }
+
+            if (isToManual) {
+                toLocation = document.getElementById('toManual').value.trim();
+                toLatLng = '';
+            } else if (toPlace) {
+                toLocation = toPlace.formattedAddress || toPlace.displayName || '';
+                toLatLng = toPlace.location ? `${toPlace.location.lat()},${toPlace.location.lng()}` : '';
+            }
+
             const data = {
+                action: shouldUpdate ? 'update' : 'new',
                 firstName: firstNameVal,
                 email: emailVal,
-                fromLocation, fromLatLng, fromSource,
-                toLocation, toLatLng, toSource,
-                distance
+                fromLocation,
+                fromLatLng,
+                toLocation,
+                toLatLng,
+                distance,
+                ip: userIP,
+                country: userCountry
             };
 
             try {
-                // Send to Google Sheets
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -1043,37 +1197,46 @@
                     body: JSON.stringify(data)
                 });
 
-                // Show success message
-                showSuccess();
+                // Show success
+                form.style.display = 'none';
+                successScreen.classList.add('show');
+                progressFill.style.width = '100%';
 
             } catch (err) {
-                console.error('Error saving to sheets:', err);
-                alert('There was an error submitting. Please try again.');
+                alert('Error submitting. Please try again.');
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
             }
         });
 
+        // Modal handlers
+        document.getElementById('modalNew').addEventListener('click', () => {
+            updateModal.classList.remove('show');
+            shouldUpdate = false;
+            form.dispatchEvent(new Event('submit'));
+        });
+
+        document.getElementById('modalUpdate').addEventListener('click', () => {
+            updateModal.classList.remove('show');
+            shouldUpdate = true;
+            form.dispatchEvent(new Event('submit'));
+        });
+
         // ============================================
-        // SUCCESS MESSAGE
+        // SHARE FUNCTIONS
         // ============================================
-        function showSuccess() {
-            document.querySelector('.form-card').innerHTML = `
-                <div style="text-align: center; padding: 40px 20px;">
-                    <div style="width: 80px; height: 80px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
-                        <svg width="40" height="40" fill="none" stroke="white" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                    </div>
-                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 12px;">You're registered!</h2>
-                    <p style="color: #64748b; line-height: 1.6; margin-bottom: 24px;">We'll notify you by email when we find a carpool match for your route.</p>
-                    <button onclick="location.reload()" style="background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; font-weight: 500; cursor: pointer;">Submit another</button>
-                </div>
-            `;
-            document.querySelector('.progress-container').style.display = 'none';
+        function shareWhatsApp() {
+            const text = encodeURIComponent('Join Community Carpool! Match with neighbors on similar routes, save money and reduce emissions. Sign up here: ' + SHARE_URL);
+            window.open('https://wa.me/?text=' + text, '_blank');
         }
 
-        // Initial progress update
+        function copyLink() {
+            navigator.clipboard.writeText(SHARE_URL).then(() => {
+                alert('Link copied!');
+            });
+        }
+
+        // Initial
         updateProgress();
     </script>
 
