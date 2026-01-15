@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Location Picker</title>
+  <title>Community Carpool – Location Picker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     body {
@@ -11,100 +12,94 @@
       max-width: 600px;
       margin: auto;
     }
-
     h2 {
       margin-bottom: 20px;
     }
-
-    .field {
-      margin-bottom: 14px;
-    }
-
-    gmp-place-autocomplete {
+    input {
       width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
     }
-
     button {
       padding: 12px 20px;
       font-size: 16px;
-      margin-top: 20px;
       cursor: pointer;
     }
   </style>
 </head>
-<body>
 
+<body>
   <h2>Select a Location</h2>
 
-  <div class="field">
-    <gmp-place-autocomplete
-      id="fromPlace"
-      placeholder="Where are you travelling from?"
-    ></gmp-place-autocomplete>
-  </div>
+  <input
+    id="autocomplete-from"
+    type="text"
+    placeholder="Where are you travelling from?"
+  />
 
-  <div class="field">
-    <gmp-place-autocomplete
-      id="toPlace"
-      placeholder="Where are you travelling to?"
-    ></gmp-place-autocomplete>
-  </div>
+  <input
+    id="autocomplete-to"
+    type="text"
+    placeholder="Where are you travelling to?"
+  />
 
   <button id="continueBtn">Continue</button>
 
-  <!-- Google Maps JS (NEW API, REQUIRED) -->
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&v=beta"
-    async
-    defer
-  ></script>
-
   <script>
-    let fromResult = null;
-    let toResult = null;
+    let autocompleteFrom;
+    let autocompleteTo;
+    let fromPlace = null;
+    let toPlace = null;
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const fromEl = document.getElementById("fromPlace");
-      const toEl = document.getElementById("toPlace");
+    function initAutocomplete() {
+      const fromInput = document.getElementById("autocomplete-from");
+      const toInput = document.getElementById("autocomplete-to");
 
-      fromEl.addEventListener("gmp-placeselect", (event) => {
-        fromResult = event.detail.place;
+      autocompleteFrom = new google.maps.places.Autocomplete(fromInput, {
+        types: ["geocode"],
       });
 
-      toEl.addEventListener("gmp-placeselect", (event) => {
-        toResult = event.detail.place;
+      autocompleteTo = new google.maps.places.Autocomplete(toInput, {
+        types: ["geocode"],
       });
 
-      document.getElementById("continueBtn").addEventListener("click", async () => {
-        if (!fromResult || !toResult) {
-          alert("Please select both From and To locations.");
-          return;
-        }
-
-        const fromLocation = await fromResult.fetchFields({
-          fields: ["formattedAddress", "location"],
-        });
-
-        const toLocation = await toResult.fetchFields({
-          fields: ["formattedAddress", "location"],
-        });
-
-        const fromLat = fromLocation.location.lat();
-        const fromLng = fromLocation.location.lng();
-        const toLat = toLocation.location.lat();
-        const toLng = toLocation.location.lng();
-
-        const tallyUrl =
-          "https://tally.so/r/eqDG0e" +
-          `?MasterCommunityArea=${encodeURIComponent(fromLocation.formattedAddress)}` +
-          `&GooglePinFrom=${fromLat},${fromLng}` +
-          `&MasterCommunityArea2=${encodeURIComponent(toLocation.formattedAddress)}` +
-          `&GooglePinTo=${toLat},${toLng}`;
-
-        window.location.href = tallyUrl;
+      autocompleteFrom.addListener("place_changed", () => {
+        fromPlace = autocompleteFrom.getPlace();
       });
+
+      autocompleteTo.addListener("place_changed", () => {
+        toPlace = autocompleteTo.getPlace();
+      });
+    }
+
+    document.getElementById("continueBtn").addEventListener("click", () => {
+      if (!fromPlace || !toPlace || !fromPlace.geometry || !toPlace.geometry) {
+        alert("Please select both locations from the dropdown suggestions.");
+        return;
+      }
+
+      const fromLat = fromPlace.geometry.location.lat();
+      const fromLng = fromPlace.geometry.location.lng();
+      const toLat = toPlace.geometry.location.lat();
+      const toLng = toPlace.geometry.location.lng();
+
+      const tallyUrl =
+        "https://tally.so/r/eqDG0e" +
+        `?FromLocation=${encodeURIComponent(fromPlace.formatted_address)}` +
+        `&FromLatLng=${fromLat},${fromLng}` +
+        `&ToLocation=${encodeURIComponent(toPlace.formatted_address)}` +
+        `&ToLatLng=${toLat},${toLng}`;
+
+      window.location.href = tallyUrl;
     });
   </script>
 
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&v=beta&callback=initAutocomplete"
+    async
+    defer
+  ></script>
 </body>
 </html>
