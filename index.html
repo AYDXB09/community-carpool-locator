@@ -7,73 +7,124 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 32px;
-      max-width: 720px;
+      padding: 30px;
+      max-width: 520px;
       margin: auto;
     }
 
     h2 {
-      margin-bottom: 8px;
+      margin-bottom: 20px;
     }
 
-    label {
-      font-weight: bold;
+    gmp-place-autocomplete {
       display: block;
-      margin-top: 24px;
-      margin-bottom: 6px;
-    }
-
-    .helper {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 10px;
-    }
-
-    input {
       width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      margin-bottom: 14px;
+      --gmp-place-autocomplete-input-padding: 12px;
+      --gmp-place-autocomplete-input-font-size: 16px;
     }
 
     button {
-      margin-top: 24px;
-      padding: 14px 24px;
+      width: 100%;
+      padding: 14px;
       font-size: 16px;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #256428;
+    }
+
+    .helper {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 16px;
     }
   </style>
 </head>
 
 <body>
 
-  <h2>Select Your Locations</h2>
+  <h2>Choose Your Route</h2>
 
   <!-- FROM -->
-  <label for="fromInput">From (Starting Location)</label>
-  <div class="helper">
-    Search by community, building, school, office, or nearby landmark.<br>
-    Examples: <em>Saheel 2</em>, <em>Dwight School Dubai</em>, <em>Business Bay Metro</em>
-  </div>
-  <input
+  <gmp-place-autocomplete
     id="fromInput"
-    type="text"
-    placeholder="Community, building, school, office, or landmark"
-  />
+    placeholder="From: community, school, office, or landmark (Dubai)"
+  ></gmp-place-autocomplete>
+
+  <div class="helper">
+    Example: Saheel 2, Dwight School Dubai, Mall of the Emirates
+  </div>
 
   <!-- TO -->
-  <label for="toInput">To (Destination)</label>
-  <div class="helper">
-    Enter where you usually travel to — school, workplace, community, or landmark.
-  </div>
-  <input
+  <gmp-place-autocomplete
     id="toInput"
-    type="text"
-    placeholder="School, workplace, community, or landmark"
-  />
+    placeholder="To: destination community, school, or landmark"
+  ></gmp-place-autocomplete>
+
+  <div class="helper">
+    Tip: select from suggestions — typing alone won’t work
+  </div>
 
   <button id="continueBtn">Continue</button>
+
+  <!-- LOGIC -->
+  <script>
+    let fromPlace = null;
+    let toPlace = null;
+
+    async function initAutocomplete() {
+      const fromEl = document.getElementById("fromInput");
+      const toEl = document.getElementById("toInput");
+
+      // UAE-only bias
+      fromEl.componentRestrictions = { country: "ae" };
+      toEl.componentRestrictions = { country: "ae" };
+
+      fromEl.addEventListener("gmp-placeselect", (event) => {
+        fromPlace = event.place;
+      });
+
+      toEl.addEventListener("gmp-placeselect", (event) => {
+        toPlace = event.place;
+      });
+    }
+
+    document.getElementById("continueBtn").addEventListener("click", async () => {
+      if (!fromPlace || !toPlace) {
+        alert("Please select both locations from the dropdown suggestions.");
+        return;
+      }
+
+      // Fetch required fields
+      await fromPlace.fetchFields({
+        fields: ["formattedAddress", "location"]
+      });
+
+      await toPlace.fetchFields({
+        fields: ["formattedAddress", "location"]
+      });
+
+      const fromLat = fromPlace.location.lat;
+      const fromLng = fromPlace.location.lng;
+      const toLat = toPlace.location.lat;
+      const toLng = toPlace.location.lng;
+
+      const tallyUrl =
+        "https://tally.so/r/eqDG0e" +
+        `?FromLocation=${encodeURIComponent(fromPlace.formattedAddress)}` +
+        `&FromLatLng=${fromLat},${fromLng}` +
+        `&ToLocation=${encodeURIComponent(toPlace.formattedAddress)}` +
+        `&ToLatLng=${toLat},${toLng}`;
+
+      window.location.href = tallyUrl;
+    });
+  </script>
 
   <!-- GOOGLE MAPS -->
   <script
@@ -81,54 +132,6 @@
     async
     defer
   ></script>
-
-  <script>
-    let fromAutocomplete, toAutocomplete;
-    let fromPlace = null;
-    let toPlace = null;
-
-    function initAutocomplete() {
-      const fromInput = document.getElementById("fromInput");
-      const toInput = document.getElementById("toInput");
-
-      fromAutocomplete = new google.maps.places.Autocomplete(fromInput, {
-        types: ["geocode"],
-      });
-
-      toAutocomplete = new google.maps.places.Autocomplete(toInput, {
-        types: ["geocode"],
-      });
-
-      fromAutocomplete.addListener("place_changed", () => {
-        fromPlace = fromAutocomplete.getPlace();
-      });
-
-      toAutocomplete.addListener("place_changed", () => {
-        toPlace = toAutocomplete.getPlace();
-      });
-    }
-
-    document.getElementById("continueBtn").addEventListener("click", () => {
-      if (!fromPlace || !fromPlace.geometry || !toPlace || !toPlace.geometry) {
-        alert("Please select both locations from the suggestions.");
-        return;
-      }
-
-      const fromLat = fromPlace.geometry.location.lat();
-      const fromLng = fromPlace.geometry.location.lng();
-      const toLat = toPlace.geometry.location.lat();
-      const toLng = toPlace.geometry.location.lng();
-
-      const tallyUrl =
-        "https://tally.so/r/eqDG0e" +
-        `?FromLocation=${encodeURIComponent(fromPlace.formatted_address)}` +
-        `&FromLatLng=${fromLat},${fromLng}` +
-        `&ToLocation=${encodeURIComponent(toPlace.formatted_address)}` +
-        `&ToLatLng=${toLat},${toLng}`;
-
-      window.location.href = tallyUrl;
-    });
-  </script>
 
 </body>
 </html>
