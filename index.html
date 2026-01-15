@@ -401,6 +401,40 @@
             --gmp-place-autocomplete-input-border-radius: 8px;
         }
 
+        /* Google Places dropdown styling for mobile */
+        .pac-container {
+            max-height: 200px !important;
+            overflow-y: auto !important;
+            position: absolute !important;
+            z-index: 10000 !important;
+            background: white !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+            margin-top: 4px !important;
+        }
+
+        .pac-item {
+            padding: 10px 14px !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+        }
+
+        .pac-item:hover,
+        .pac-item.pac-item-selected {
+            background: #f0fdf4 !important;
+        }
+
+        .pac-icon {
+            margin-right: 8px !important;
+        }
+
+        /* Ensure dropdown appears below input */
+        .location-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
         .manual-link {
             font-size: 13px;
             color: var(--primary);
@@ -1213,12 +1247,13 @@
         setupManual('to');
 
         // ============================================
-        // GOOGLE PLACES
+        // GOOGLE PLACES - Robust Implementation
         // ============================================
         let placesInitialized = false;
+        let placesReadyPromise = null;
 
         async function initAutocomplete() {
-            console.log('Initializing Google Places...');
+            console.log('Initializing Google Places with country:', userCountry);
 
             const fromEl = document.getElementById('fromInput');
             const toEl = document.getElementById('toInput');
@@ -1228,83 +1263,138 @@
                 return;
             }
 
-            // Set country restrictions
-            fromEl.componentRestrictions = { country: userCountry };
-            toEl.componentRestrictions = { country: userCountry };
+            // Set country restrictions dynamically
+            try {
+                fromEl.componentRestrictions = { country: userCountry };
+                toEl.componentRestrictions = { country: userCountry };
+            } catch (e) {
+                console.log('Could not set country restrictions:', e);
+            }
 
-            // FROM location handler
+            // Helper function to handle place selection
+            function handlePlaceSelect(type, place) {
+                console.log(type.toUpperCase() + ' place object:', place);
+
+                if (type === 'from') {
+                    fromSelected = true;
+                    if (place) {
+                        fromLocationText = place.formattedAddress || place.displayName || place.name || '';
+                        if (place.location) {
+                            try {
+                                fromLatLng = place.location.lat() + ',' + place.location.lng();
+                            } catch (e) {
+                                fromLatLng = '';
+                            }
+                        }
+                    }
+                    console.log('FROM set:', fromLocationText, 'selected:', fromSelected);
+                } else {
+                    toSelected = true;
+                    if (place) {
+                        toLocationText = place.formattedAddress || place.displayName || place.name || '';
+                        if (place.location) {
+                            try {
+                                toLatLng = place.location.lat() + ',' + place.location.lng();
+                            } catch (e) {
+                                toLatLng = '';
+                            }
+                        }
+                    }
+                    console.log('TO set:', toLocationText, 'selected:', toSelected);
+                }
+
+                setLocationStatus(type, 'success');
+                updateProgress();
+            }
+
+            // FROM: Listen for gmp-placeselect event
             fromEl.addEventListener('gmp-placeselect', async (e) => {
-                console.log('FROM place selected:', e);
+                console.log('FROM gmp-placeselect fired');
                 setLocationStatus('from', 'loading');
 
                 try {
                     const place = e.place;
-                    if (place) {
+                    if (place && place.fetchFields) {
                         await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
-                        fromLocationText = place.formattedAddress || place.displayName || 'Selected location';
-                        if (place.location) {
-                            fromLatLng = place.location.lat() + ',' + place.location.lng();
-                        }
-                        fromSelected = true;
-                        console.log('FROM saved:', fromLocationText, fromLatLng);
                     }
+                    handlePlaceSelect('from', place);
                 } catch (err) {
-                    console.error('FROM place error:', err);
-                    // Still mark as selected if we got here
-                    fromSelected = true;
-                    fromLocationText = 'Selected location';
+                    console.error('FROM fetchFields error:', err);
+                    // Still mark as selected
+                    handlePlaceSelect('from', null);
                 }
-
-                setLocationStatus('from', 'success');
-                updateProgress();
             });
 
-            // TO location handler
+            // TO: Listen for gmp-placeselect event
             toEl.addEventListener('gmp-placeselect', async (e) => {
-                console.log('TO place selected:', e);
+                console.log('TO gmp-placeselect fired');
                 setLocationStatus('to', 'loading');
 
                 try {
                     const place = e.place;
-                    if (place) {
+                    if (place && place.fetchFields) {
                         await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
-                        toLocationText = place.formattedAddress || place.displayName || 'Selected location';
-                        if (place.location) {
-                            toLatLng = place.location.lat() + ',' + place.location.lng();
-                        }
-                        toSelected = true;
-                        console.log('TO saved:', toLocationText, toLatLng);
                     }
+                    handlePlaceSelect('to', place);
                 } catch (err) {
-                    console.error('TO place error:', err);
-                    toSelected = true;
-                    toLocationText = 'Selected location';
+                    console.error('TO fetchFields error:', err);
+                    handlePlaceSelect('to', null);
                 }
-
-                setLocationStatus('to', 'success');
-                updateProgress();
             });
 
-            // Also listen for input changes as backup detection
+            // BACKUP: Also check for place_changed if using legacy API
+            if (fromEl.addEventListener) {
+                fromEl.addEventListener('place_changed', () => {
+                    console.log('FROM place_changed fired (legacy)');
+                    fromSelected = true;
+                    setLocationStatus('from', 'success');
+                    updateProgress();
+                });
+            }
+
+            if (toEl.addEventListener) {
+                toEl.addEventListener('place_changed', () => {
+                    console.log('TO place_changed fired (legacy)');
+                    toSelected = true;
+                    setLocationStatus('to', 'success');
+                    updateProgress();
+                });
+            }
+
+            // Monitor for clicks on pac-item (Google dropdown items)
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.pac-item')) {
+                    console.log('pac-item clicked');
+                    // Give time for the place to be set
+                    setTimeout(() => {
+                        updateProgress();
+                    }, 100);
+                }
+            });
+
+            // Reset selection if user starts typing again
             fromEl.addEventListener('input', () => {
-                // Reset if user is typing again
-                if (fromSelected) {
+                if (fromSelected && !isFromManual) {
                     fromSelected = false;
+                    fromLocationText = '';
+                    fromLatLng = '';
                     setLocationStatus('from', '');
                     updateProgress();
                 }
             });
 
             toEl.addEventListener('input', () => {
-                if (toSelected) {
+                if (toSelected && !isToManual) {
                     toSelected = false;
+                    toLocationText = '';
+                    toLatLng = '';
                     setLocationStatus('to', '');
                     updateProgress();
                 }
             });
 
             placesInitialized = true;
-            console.log('Google Places initialized with country:', userCountry);
+            console.log('Google Places fully initialized');
         }
 
         // ============================================
