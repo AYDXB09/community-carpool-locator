@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Location Picker</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 30px; }
+    input { width: 100%; padding: 12px; font-size: 16px; }
+    button { padding: 12px 20px; font-size: 16px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h2>Select a Location</h2>
+
+  <input
+    id="autocomplete-from"
+    placeholder="Where are you travelling from?"
+  />
+
+  <input
+    id="autocomplete-to"
+    placeholder="Where are you travelling to?"
+    style="margin-top: 10px;"
+  />
+
+  <button id="continueBtn">Continue</button>
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places"
+  ></script>
+  <script>
+    let autocompleteFrom, autocompleteTo;
+    let fromPlace, toPlace;
+
+    function initAutocomplete() {
+      const fromInput = document.getElementById("autocomplete-from");
+      const toInput = document.getElementById("autocomplete-to");
+
+      autocompleteFrom = new google.maps.places.Autocomplete(fromInput, {
+        types: ["geocode"],
+      });
+
+      autocompleteTo = new google.maps.places.Autocomplete(toInput, {
+        types: ["geocode"],
+      });
+
+      autocompleteFrom.addListener("place_changed", () => {
+        fromPlace = autocompleteFrom.getPlace();
+      });
+
+      autocompleteTo.addListener("place_changed", () => {
+        toPlace = autocompleteTo.getPlace();
+      });
+    }
+
+    document
+      .getElementById("continueBtn")
+      .addEventListener("click", () => {
+        if (!fromPlace || !toPlace) {
+          alert("Please select both a From and a To location.");
+          return;
+        }
+
+        const fromLat = fromPlace.geometry.location.lat();
+        const fromLng = fromPlace.geometry.location.lng();
+        const toLat = toPlace.geometry.location.lat();
+        const toLng = toPlace.geometry.location.lng();
+
+        const tallyUrl =
+          "https://tally.so/r/eqDG0e" +
+          `?MasterCommunityArea=${encodeURIComponent(
+            fromPlace.formatted_address
+          )}&GooglePinFrom=${fromLat},${fromLng}` +
+          `&MasterCommunityArea2=${encodeURIComponent(
+            toPlace.formatted_address
+          )}&GooglePinTo=${toLat},${toLng}`;
+
+        window.location.href = tallyUrl;
+      });
+
+    window.initAutocomplete = initAutocomplete;
+  </script>
+
+  <script>
+    if (typeof google !== "undefined") {
+      initAutocomplete();
+    }
+  </script>
+</body>
+</html>
