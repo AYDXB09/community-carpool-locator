@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Community Carpool | Share Rides. Cut Emissions.</title>
     <meta name="description" content="Match with people on similar routes to carpool voluntarily." />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -709,18 +711,20 @@
         checkEditToken();
 
         // ============================================
-        // IP DETECTION
+        // IP DETECTION (CORS-friendly APIs)
         // ============================================
         async function getIPInfo() {
+            // Use only CORS-friendly APIs
             const apis = [
-                { url: 'https://ipapi.co/json/', parse: d => ({ ip: d.ip, cc: d.country_code }) },
                 { url: 'https://ipwho.is/', parse: d => ({ ip: d.ip, cc: d.country_code }) },
-                { url: 'https://api.ipify.org?format=json', parse: d => ({ ip: d.ip, cc: 'ae' }) }
+                { url: 'https://api.ipify.org?format=json', parse: d => ({ ip: d.ip, cc: null }) },
+                { url: 'https://api.db-ip.com/v2/free/self', parse: d => ({ ip: d.ipAddress, cc: d.countryCode }) }
             ];
 
             for (const api of apis) {
                 try {
                     const res = await fetch(api.url);
+                    if (!res.ok) continue;
                     const data = await res.json();
                     const parsed = api.parse(data);
                     if (parsed.ip) {
@@ -729,10 +733,14 @@
                         console.log('IP:', userIP, 'Country:', userCountry);
                         return;
                     }
-                } catch (e) { }
+                } catch (e) {
+                    // Silent fail, try next API
+                }
             }
-            userIP = 'unknown-' + Date.now();
+            // Fallback if all APIs fail
+            userIP = 'unknown';
             userCountry = 'ae';
+            console.log('IP detection failed, using defaults');
         }
         getIPInfo();
 
@@ -961,7 +969,7 @@
     </script>
 
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&callback=initAutocomplete"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&loading=async&callback=initAutocomplete"
         async defer></script>
 </body>
 
