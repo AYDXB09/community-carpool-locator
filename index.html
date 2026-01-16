@@ -56,7 +56,7 @@
         }
 
         .logo {
-            max-width: 400px;
+            max-width: 280px;
             width: 100%;
             margin-bottom: 16px;
         }
@@ -280,6 +280,7 @@
             width: 100%;
             height: 6px;
             -webkit-appearance: none;
+            appearance: none;
             background: linear-gradient(to right, var(--primary) 0%, var(--primary-light) 100%);
             border-radius: 3px;
             outline: none;
@@ -479,7 +480,7 @@
             }
 
             .logo {
-                max-width: 350px;
+                max-width: 240px;
             }
 
             .tagline {
@@ -515,11 +516,11 @@
                 </h2>
                 <div class="input-group">
                     <label class="label">First Name<span class="req">*</span></label>
-                    <input type="text" id="firstName" class="input" placeholder="Your first name" required />
+                    <input type="text" id="firstName" class="input" placeholder="Your first name" />
                 </div>
                 <div class="input-group">
                     <label class="label">Email<span class="req">*</span></label>
-                    <input type="email" id="email" class="input" placeholder="you@example.com" required />
+                    <input type="email" id="email" class="input" placeholder="you@example.com" />
                     <p id="emailError" class="error-msg">Please enter a valid email</p>
                 </div>
             </div>
@@ -538,11 +539,12 @@
                 <div class="input-group">
                     <div class="location-wrapper">
                         <input type="text" id="fromInput" class="place-input"
-                            placeholder="Search your area or community" autocomplete="off" required />
+                            placeholder="Search your area or community" autocomplete="off" />
                         <div class="location-status" id="fromStatus"></div>
                     </div>
                     <div class="privacy-note">
-                        Enter only your area or community (e.g., Alma - Arabian Ranches). <strong>
+                        ⚠️ Enter only your area or community (e.g., Alma - Arabian Ranches). <strong>Do not include
+                            street or villa numbers.</strong>
                     </div>
                 </div>
             </div>
@@ -559,7 +561,7 @@
                 <div class="input-group">
                     <div class="location-wrapper">
                         <input type="text" id="toInput" class="place-input" placeholder="Search your destination"
-                            autocomplete="off" required />
+                            autocomplete="off" />
                         <div class="location-status" id="toStatus"></div>
                     </div>
                 </div>
@@ -927,8 +929,10 @@
                     body: JSON.stringify(data)
                 });
 
-                form.style.display = 'none';
-                successScreen.classList.add('show');
+                // Hide form and show success
+                document.getElementById('form').style.display = 'none';
+                document.getElementById('successScreen').classList.add('show');
+                console.log('Success screen shown');
 
             } catch (err) {
                 console.error('Submit error:', err);
