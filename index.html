@@ -944,10 +944,37 @@
         // ============================================
         // GOOGLE PLACES AUTOCOMPLETE
         // ============================================
-        function initAutocomplete() {
-            console.log('Initializing Google Places...');
 
-            // Use types and bias instead of restriction to rank country first but show all
+        // Country center coordinates for biasing (lat, lng, radius in km)
+        const COUNTRY_CENTERS = {
+            'ae': { lat: 24.4539, lng: 54.3773, name: 'UAE' },
+            'us': { lat: 37.0902, lng: -95.7129, name: 'USA' },
+            'uk': { lat: 51.5074, lng: -0.1278, name: 'UK' },
+            'gb': { lat: 51.5074, lng: -0.1278, name: 'UK' },
+            'in': { lat: 20.5937, lng: 78.9629, name: 'India' },
+            'sa': { lat: 23.8859, lng: 45.0792, name: 'Saudi Arabia' },
+            'eg': { lat: 26.8206, lng: 30.8025, name: 'Egypt' },
+            'pk': { lat: 30.3753, lng: 69.3451, name: 'Pakistan' },
+            'qa': { lat: 25.3548, lng: 51.1839, name: 'Qatar' },
+            'kw': { lat: 29.3117, lng: 47.4818, name: 'Kuwait' },
+            'bh': { lat: 26.0667, lng: 50.5577, name: 'Bahrain' },
+            'om': { lat: 21.4735, lng: 55.9754, name: 'Oman' }
+        };
+
+        function initAutocomplete() {
+            console.log('Initializing Google Places with country bias:', userCountry);
+
+            // Get bias location for user's country
+            const countryCenter = COUNTRY_CENTERS[userCountry] || COUNTRY_CENTERS['ae'];
+
+            // Create a circle bounds around the country center (500km radius)
+            const circle = new google.maps.Circle({
+                center: { lat: countryCenter.lat, lng: countryCenter.lng },
+                radius: 500000 // 500km in meters
+            });
+            const bounds = circle.getBounds();
+
+            // Options with types but no restrictions
             const autocompleteOptions = {
                 fields: ['formatted_address', 'name', 'geometry'],
                 types: ['geocode', 'establishment']
@@ -955,12 +982,7 @@
 
             // FROM autocomplete
             fromAutocomplete = new google.maps.places.Autocomplete(fromInput, autocompleteOptions);
-
-            // Bias towards user's country (not restrict)
-            if (userCountry) {
-                // Use AutocompleteService for prediction biasing if available
-                fromAutocomplete.setComponentRestrictions(null);
-            }
+            fromAutocomplete.setBounds(bounds); // Bias towards country
 
             fromAutocomplete.addListener('place_changed', () => {
                 const place = fromAutocomplete.getPlace();
@@ -984,6 +1006,7 @@
 
             // TO autocomplete
             toAutocomplete = new google.maps.places.Autocomplete(toInput, autocompleteOptions);
+            toAutocomplete.setBounds(bounds); // Bias towards country
 
             toAutocomplete.addListener('place_changed', () => {
                 const place = toAutocomplete.getPlace();
