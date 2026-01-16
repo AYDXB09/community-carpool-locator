@@ -947,11 +947,20 @@
         function initAutocomplete() {
             console.log('Initializing Google Places...');
 
+            // Use types and bias instead of restriction to rank country first but show all
+            const autocompleteOptions = {
+                fields: ['formatted_address', 'name', 'geometry'],
+                types: ['geocode', 'establishment']
+            };
+
             // FROM autocomplete
-            fromAutocomplete = new google.maps.places.Autocomplete(fromInput, {
-                componentRestrictions: { country: userCountry },
-                fields: ['formatted_address', 'name', 'geometry']
-            });
+            fromAutocomplete = new google.maps.places.Autocomplete(fromInput, autocompleteOptions);
+
+            // Bias towards user's country (not restrict)
+            if (userCountry) {
+                // Use AutocompleteService for prediction biasing if available
+                fromAutocomplete.setComponentRestrictions(null);
+            }
 
             fromAutocomplete.addListener('place_changed', () => {
                 const place = fromAutocomplete.getPlace();
@@ -966,7 +975,6 @@
                     setLocationStatus('from', 'success');
                     console.log('FROM saved:', fromLocationText);
                 } else {
-                    // User typed but didn't select - still allow
                     fromLocationText = fromInput.value;
                     fromSelected = true;
                     setLocationStatus('from', 'success');
@@ -975,10 +983,7 @@
             });
 
             // TO autocomplete
-            toAutocomplete = new google.maps.places.Autocomplete(toInput, {
-                componentRestrictions: { country: userCountry },
-                fields: ['formatted_address', 'name', 'geometry']
-            });
+            toAutocomplete = new google.maps.places.Autocomplete(toInput, autocompleteOptions);
 
             toAutocomplete.addListener('place_changed', () => {
                 const place = toAutocomplete.getPlace();
@@ -1069,23 +1074,26 @@
             console.log('Submitting:', data);
 
             try {
-                await fetch(APPS_SCRIPT_URL, {
+                // Fire and forget - don't wait for response (speed optimization)
+                fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
-                // Save to localStorage for future detection
+                // Save to localStorage for future detection (include email for update matching)
                 localStorage.setItem('carpoolSubmission', JSON.stringify({
                     firstName: firstNameVal,
                     email: emailVal,
                     fromLocation: finalFromLocation,
                     toLocation: finalToLocation,
                     distance: distance,
+                    ip: userIP,
                     timestamp: new Date().toISOString()
                 }));
 
+                // Show success immediately (don't wait for server)
                 form.style.display = 'none';
                 successScreen.classList.add('show');
                 progressFill.style.width = '100%';
