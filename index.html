@@ -711,6 +711,41 @@
         checkEditToken();
 
         // ============================================
+        // CHECK FOR DELETE TOKEN IN URL
+        // ============================================
+        function checkDeleteToken() {
+            const params = new URLSearchParams(window.location.search);
+            const deleteToken = params.get('delete');
+            if (deleteToken) {
+                // Show confirmation dialog
+                if (confirm('Are you sure you want to delete your data? This action cannot be undone.')) {
+                    deleteUserData(deleteToken);
+                } else {
+                    // Redirect to home page
+                    window.location.href = SHARE_URL;
+                }
+            }
+        }
+
+        async function deleteUserData(token) {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL + '?action=deleteByToken&token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success) {
+                    alert('Your data has been deleted successfully.');
+                } else {
+                    alert('Could not delete data: ' + (data.message || 'Unknown error'));
+                }
+                window.location.href = SHARE_URL;
+            } catch (e) {
+                alert('Error deleting data. Please try again.');
+                console.log('Delete error:', e);
+            }
+        }
+
+        checkDeleteToken();
+
+        // ============================================
         // IP DETECTION (CORS-friendly APIs)
         // ============================================
         async function getIPInfo() {
