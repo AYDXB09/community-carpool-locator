@@ -784,6 +784,8 @@
         let isFromManual = false, isToManual = false;
         let userIP = '', userCountry = 'ae';
         let fromAutocomplete = null, toAutocomplete = null;
+        let isEditMode = false;
+        let previousSubmission = null;
 
         // ============================================
         // DOM
@@ -1047,7 +1049,7 @@
             let finalToLocation = isToManual ? document.getElementById('toManual').value.trim() : (toLocationText || toInput.value);
 
             const data = {
-                action: 'new',
+                action: isEditMode ? 'update' : 'new',
                 firstName: firstNameVal,
                 email: emailVal,
                 fromLocation: finalFromLocation,
@@ -1056,7 +1058,12 @@
                 toLatLng: toLatLng,
                 distance: distance,
                 ip: userIP,
-                country: userCountry
+                country: userCountry,
+                // Include previous values for comparison (for bold formatting)
+                prevFirstName: previousSubmission ? previousSubmission.firstName : '',
+                prevFromLocation: previousSubmission ? previousSubmission.fromLocation : '',
+                prevToLocation: previousSubmission ? previousSubmission.toLocation : '',
+                prevDistance: previousSubmission ? previousSubmission.distance : ''
             };
 
             console.log('Submitting:', data);
@@ -1068,6 +1075,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+
+                // Save to localStorage for future detection
+                localStorage.setItem('carpoolSubmission', JSON.stringify({
+                    firstName: firstNameVal,
+                    email: emailVal,
+                    fromLocation: finalFromLocation,
+                    toLocation: finalToLocation,
+                    distance: distance,
+                    timestamp: new Date().toISOString()
+                }));
 
                 form.style.display = 'none';
                 successScreen.classList.add('show');
@@ -1095,8 +1112,58 @@
             });
         }
 
+        // ============================================
+        // CHECK FOR PREVIOUS SUBMISSION
+        // ============================================
+        function checkPreviousSubmission() {
+            const saved = localStorage.getItem('carpoolSubmission');
+            if (saved) {
+                try {
+                    previousSubmission = JSON.parse(saved);
+                    console.log('Found previous submission:', previousSubmission);
+                    // Show the edit modal
+                    updateModal.classList.add('show');
+                } catch (e) {
+                    console.log('Could not parse saved submission');
+                }
+            }
+        }
+
+        // Modal handlers
+        document.getElementById('modalNew').addEventListener('click', () => {
+            updateModal.classList.remove('show');
+            isEditMode = false;
+            previousSubmission = null;
+            localStorage.removeItem('carpoolSubmission');
+        });
+
+        document.getElementById('modalUpdate').addEventListener('click', () => {
+            updateModal.classList.remove('show');
+            isEditMode = true;
+            // Pre-fill form with previous values
+            if (previousSubmission) {
+                firstName.value = previousSubmission.firstName || '';
+                email.value = previousSubmission.email || '';
+                fromInput.value = previousSubmission.fromLocation || '';
+                toInput.value = previousSubmission.toLocation || '';
+                fromLocationText = previousSubmission.fromLocation || '';
+                toLocationText = previousSubmission.toLocation || '';
+                fromSelected = true;
+                toSelected = true;
+                setLocationStatus('from', 'success');
+                setLocationStatus('to', 'success');
+                // Set distance
+                const distRadio = document.querySelector(`input[name="distance"][value="${previousSubmission.distance}"]`);
+                if (distRadio) distRadio.checked = true;
+                updateProgress();
+            }
+        });
+
         // Initial progress
         updateProgress();
+
+        // Check for previous submission after page loads
+        setTimeout(checkPreviousSubmission, 500);
     </script>
 
     <script
