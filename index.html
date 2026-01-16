@@ -43,7 +43,7 @@
             min-height: 100vh;
         }
 
-        /* ========== PROGRESS BAR ========== */
+        /* Progress Bar */
         .progress-bar-fixed {
             position: fixed;
             top: 0;
@@ -61,151 +61,7 @@
             transition: width 0.3s ease;
         }
 
-        /* ========== TUTORIAL ========== */
-        .tutorial-overlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
-
-        .tutorial-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .tutorial-container {
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            color: white;
-        }
-
-        .tutorial-slide {
-            display: none;
-            animation: fadeSlide 0.5s ease;
-        }
-
-        .tutorial-slide.active {
-            display: block;
-        }
-
-        @keyframes fadeSlide {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .tutorial-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 24px;
-            background: rgba(22, 163, 74, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse 2s infinite;
-        }
-
-        .tutorial-icon svg {
-            width: 40px;
-            height: 40px;
-            color: var(--primary-light);
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.05);
-                opacity: 0.8;
-            }
-        }
-
-        .tutorial-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .tutorial-text {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 32px;
-            line-height: 1.6;
-        }
-
-        .tutorial-dots {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        .tutorial-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transition: all 0.3s;
-        }
-
-        .tutorial-dot.active {
-            background: var(--primary-light);
-            width: 24px;
-            border-radius: 4px;
-        }
-
-        .tutorial-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 48px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tutorial-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .tutorial-skip {
-            display: block;
-            width: 100%;
-            margin-top: 16px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 14px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            text-align: center;
-        }
-
-        .tutorial-skip:hover {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* ========== PAGE ========== */
+        /* Page */
         .page {
             padding: 24px 16px 60px;
             max-width: 480px;
@@ -236,7 +92,7 @@
             color: var(--text-secondary);
         }
 
-        /* ========== FORM ========== */
+        /* Form */
         .form-card {
             background: var(--card);
             border-radius: var(--radius);
@@ -266,28 +122,6 @@
             width: 20px;
             height: 20px;
             color: var(--primary);
-        }
-
-        /* Location Banner */
-        .location-banner {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border: 1px solid #bbf7d0;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .location-banner-text {
-            font-size: 14px;
-            color: var(--primary-dark);
-            font-weight: 500;
-        }
-
-        .location-banner-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
         }
 
         /* Inputs */
@@ -367,6 +201,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            pointer-events: none;
         }
 
         .location-status svg {
@@ -393,46 +228,25 @@
             }
         }
 
-        gmp-place-autocomplete {
-            display: block;
+        .place-input {
             width: 100%;
-            --gmp-place-autocomplete-input-padding: 12px 40px 12px 14px;
-            --gmp-place-autocomplete-input-font-size: 16px;
-            --gmp-place-autocomplete-input-border-radius: 8px;
+            padding: 12px 40px 12px 14px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            transition: all 0.2s;
         }
 
-        /* Google Places dropdown styling for mobile */
-        .pac-container {
-            max-height: 200px !important;
-            overflow-y: auto !important;
-            position: absolute !important;
-            z-index: 10000 !important;
-            background: white !important;
-            border-radius: 8px !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
-            margin-top: 4px !important;
+        .place-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
         }
 
-        .pac-item {
-            padding: 10px 14px !important;
-            font-size: 14px !important;
-            cursor: pointer !important;
-            border-bottom: 1px solid #f0f0f0 !important;
-        }
-
-        .pac-item:hover,
-        .pac-item.pac-item-selected {
-            background: #f0fdf4 !important;
-        }
-
-        .pac-icon {
-            margin-right: 8px !important;
-        }
-
-        /* Ensure dropdown appears below input */
-        .location-wrapper {
-            position: relative;
-            z-index: 1;
+        .place-input.filled {
+            border-color: var(--success);
         }
 
         .manual-link {
@@ -458,6 +272,27 @@
             cursor: pointer;
             margin-top: 6px;
             display: inline-block;
+        }
+
+        /* Google Places dropdown */
+        .pac-container {
+            max-height: 200px !important;
+            overflow-y: auto !important;
+            z-index: 10000 !important;
+            background: white !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+            margin-top: 4px !important;
+        }
+
+        .pac-item {
+            padding: 10px 14px !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+        }
+
+        .pac-item:hover {
+            background: #f0fdf4 !important;
         }
 
         /* Distance */
@@ -744,15 +579,6 @@
                 grid-template-columns: 1fr;
             }
         }
-
-        @media (hover: none) {
-
-            .input,
-            .distance-card,
-            .submit-btn {
-                min-height: 48px;
-            }
-        }
     </style>
 </head>
 
@@ -760,66 +586,6 @@
     <!-- Progress Bar -->
     <div class="progress-bar-fixed">
         <div class="progress-bar-fill" id="progressFill"></div>
-    </div>
-
-    <!-- Tutorial -->
-    <div class="tutorial-overlay" id="tutorial">
-        <div class="tutorial-container">
-            <div class="tutorial-slide active" data-slide="1">
-                <div class="tutorial-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                </div>
-                <h2 class="tutorial-title">Welcome to Community Carpool</h2>
-                <p class="tutorial-text">We match you with neighbors heading the same direction. Reduce emissions and
-                    make new connections!</p>
-            </div>
-            <div class="tutorial-slide" data-slide="2">
-                <div class="tutorial-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </div>
-                <h2 class="tutorial-title">Tell Us Your Route</h2>
-                <p class="tutorial-text">Enter where you start and where you are going. We use approximate locations
-                    only. Your exact address is never shared.</p>
-            </div>
-            <div class="tutorial-slide" data-slide="3">
-                <div class="tutorial-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <h2 class="tutorial-title">What Happens Next?</h2>
-                <p class="tutorial-text">First, you will receive an email with your estimated carbon footprint. When we
-                    find a match, both parties get notified to coordinate.</p>
-            </div>
-            <div class="tutorial-slide" data-slide="4">
-                <div class="tutorial-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                </div>
-                <h2 class="tutorial-title">Share for Better Matches</h2>
-                <p class="tutorial-text">The more people join from your area, the faster you get matched! Share with
-                    neighbors and colleagues after signing up.</p>
-            </div>
-            <div class="tutorial-dots">
-                <span class="tutorial-dot active" data-dot="1"></span>
-                <span class="tutorial-dot" data-dot="2"></span>
-                <span class="tutorial-dot" data-dot="3"></span>
-                <span class="tutorial-dot" data-dot="4"></span>
-            </div>
-            <button class="tutorial-btn" id="tutorialNext">Next</button>
-            <button class="tutorial-skip" id="tutorialSkip">Skip tutorial</button>
-        </div>
     </div>
 
     <!-- Update Modal -->
@@ -854,14 +620,6 @@
                     </svg>
                     Your Details
                 </h2>
-
-                <!-- IP Location Banner -->
-                <div class="location-banner" id="locationBanner" style="display:none;">
-                    <div class="location-banner-text" id="locationText">You are located in United Arab Emirates</div>
-                    <div class="location-banner-sub" style="cursor:pointer;" onclick="changeCountry()">Wrong country?
-                        Click to change</div>
-                </div>
-
                 <div class="input-group">
                     <label class="label">First Name</label>
                     <input type="text" id="firstName" class="input" placeholder="Your first name" />
@@ -886,8 +644,9 @@
                 </h2>
                 <div class="input-group">
                     <p class="helper">Search or enter manually</p>
-                    <div class="location-wrapper" id="fromWrapper">
-                        <gmp-place-autocomplete id="fromInput" placeholder="Search your area"></gmp-place-autocomplete>
+                    <div class="location-wrapper">
+                        <input type="text" id="fromInput" class="place-input" placeholder="Search your area"
+                            autocomplete="off" />
                         <div class="location-status" id="fromStatus"></div>
                     </div>
                     <span class="manual-link" id="fromManualBtn">Cannot find it? Enter manually</span>
@@ -909,8 +668,9 @@
                 </h2>
                 <div class="input-group">
                     <p class="helper">Where are you heading?</p>
-                    <div class="location-wrapper" id="toWrapper">
-                        <gmp-place-autocomplete id="toInput" placeholder="Search destination"></gmp-place-autocomplete>
+                    <div class="location-wrapper">
+                        <input type="text" id="toInput" class="place-input" placeholder="Search destination"
+                            autocomplete="off" />
                         <div class="location-status" id="toStatus"></div>
                     </div>
                     <span class="manual-link" id="toManualBtn">Cannot find it? Enter manually</span>
@@ -1020,11 +780,10 @@
         // ============================================
         let fromLocationText = '', toLocationText = '';
         let fromLatLng = '', toLatLng = '';
-        let isFromManual = false, isToManual = false;
         let fromSelected = false, toSelected = false;
-        let userIP = '', userCountry = 'ae', userCountryName = 'United Arab Emirates';
-        let existingSubmission = null;
-        let shouldUpdate = false;
+        let isFromManual = false, isToManual = false;
+        let userIP = '', userCountry = 'ae';
+        let fromAutocomplete = null, toAutocomplete = null;
 
         // ============================================
         // DOM
@@ -1037,134 +796,64 @@
         const progressFill = document.getElementById('progressFill');
         const successScreen = document.getElementById('successScreen');
         const updateModal = document.getElementById('updateModal');
-        const locationBanner = document.getElementById('locationBanner');
-        const locationText = document.getElementById('locationText');
+        const fromInput = document.getElementById('fromInput');
+        const toInput = document.getElementById('toInput');
 
         // ============================================
-        // TUTORIAL
-        // ============================================
-        let currentSlide = 1;
-        const totalSlides = 4;
-        const tutorial = document.getElementById('tutorial');
-        const tutorialNext = document.getElementById('tutorialNext');
-        const tutorialSkip = document.getElementById('tutorialSkip');
-
-        function showSlide(n) {
-            document.querySelectorAll('.tutorial-slide').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tutorial-dot').forEach(d => d.classList.remove('active'));
-            document.querySelector(`.tutorial-slide[data-slide="${n}"]`).classList.add('active');
-            document.querySelector(`.tutorial-dot[data-dot="${n}"]`).classList.add('active');
-            tutorialNext.textContent = n === totalSlides ? 'Get Started' : 'Next';
-        }
-
-        tutorialNext.addEventListener('click', () => {
-            if (currentSlide < totalSlides) {
-                currentSlide++;
-                showSlide(currentSlide);
-            } else {
-                closeTutorial();
-            }
-        });
-
-        tutorialSkip.addEventListener('click', closeTutorial);
-
-        function closeTutorial() {
-            tutorial.classList.add('hidden');
-            localStorage.setItem('tutorialSeen', 'true');
-        }
-
-        if (localStorage.getItem('tutorialSeen')) {
-            tutorial.classList.add('hidden');
-        }
-
-        // ============================================
-        // IP GEOLOCATION (with fallbacks)
+        // IP DETECTION (silent, just for saving)
         // ============================================
         async function getIPInfo() {
-            // Try multiple APIs in case one fails
             const apis = [
-                { url: 'https://ipapi.co/json/', parse: d => ({ ip: d.ip, cc: d.country_code, name: d.country_name }) },
-                { url: 'https://ipwho.is/', parse: d => ({ ip: d.ip, cc: d.country_code, name: d.country }) },
-                { url: 'https://ip-api.com/json/?fields=query,countryCode,country', parse: d => ({ ip: d.query, cc: d.countryCode, name: d.country }) }
+                { url: 'https://ipapi.co/json/', parse: d => ({ ip: d.ip, cc: d.country_code }) },
+                { url: 'https://ipwho.is/', parse: d => ({ ip: d.ip, cc: d.country_code }) },
+                { url: 'https://ip-api.com/json/?fields=query,countryCode', parse: d => ({ ip: d.query, cc: d.countryCode }) }
             ];
-
             for (const api of apis) {
                 try {
                     const res = await fetch(api.url);
                     const data = await res.json();
                     const parsed = api.parse(data);
-
                     if (parsed.cc) {
                         userIP = parsed.ip || '';
                         userCountry = parsed.cc.toLowerCase();
-                        userCountryName = parsed.name || 'Unknown';
-
-                        // Show location banner
-                        locationBanner.style.display = 'block';
-                        locationText.textContent = 'You are located in ' + userCountryName;
-
-                        console.log('IP detected:', userIP, userCountryName);
+                        console.log('IP:', userIP, 'Country:', userCountry);
                         return;
                     }
-                } catch (e) {
-                    console.log('IP API failed, trying next...');
-                }
-            }
-
-            // Default fallback
-            userCountry = 'ae';
-            userCountryName = 'United Arab Emirates';
-            locationBanner.style.display = 'block';
-            locationText.textContent = 'You are located in ' + userCountryName;
-        }
-
-        // Change country function
-        function changeCountry() {
-            const newCountry = prompt('Enter your country code (e.g., ae, us, uk, in):');
-            if (newCountry && newCountry.length === 2) {
-                userCountry = newCountry.toLowerCase();
-                const countryNames = {
-                    'ae': 'United Arab Emirates', 'us': 'United States', 'uk': 'United Kingdom',
-                    'in': 'India', 'sa': 'Saudi Arabia', 'eg': 'Egypt', 'pk': 'Pakistan'
-                };
-                userCountryName = countryNames[userCountry] || newCountry.toUpperCase();
-                locationText.textContent = 'You are located in ' + userCountryName;
-
-                // Update Google Places restrictions
-                const fromEl = document.getElementById('fromInput');
-                const toEl = document.getElementById('toInput');
-                if (fromEl) fromEl.componentRestrictions = { country: userCountry };
-                if (toEl) toEl.componentRestrictions = { country: userCountry };
+                } catch (e) { }
             }
         }
-
         getIPInfo();
 
         // ============================================
-        // PROGRESS BAR
+        // PROGRESS & VALIDATION
         // ============================================
         function updateProgress() {
             let completed = 0;
             const total = 4;
 
+            // 1. Details
             if (firstName.value.trim() && email.value.includes('@')) completed++;
-            if (fromSelected || (isFromManual && document.getElementById('fromManual').value.trim())) completed++;
-            if (toSelected || (isToManual && document.getElementById('toManual').value.trim())) completed++;
-            completed++; // Distance always has default
 
-            const percent = (completed / total) * 100;
-            progressFill.style.width = percent + '%';
-
-            // Enable submit
+            // 2. From location
             const hasFrom = fromSelected || (isFromManual && document.getElementById('fromManual').value.trim());
+            if (hasFrom) completed++;
+
+            // 3. To location
             const hasTo = toSelected || (isToManual && document.getElementById('toManual').value.trim());
+            if (hasTo) completed++;
+
+            // 4. Distance (always has default)
+            completed++;
+
+            progressFill.style.width = (completed / total * 100) + '%';
+
+            // Enable submit when all filled
             const valid = firstName.value.trim() && email.value.includes('@') && hasFrom && hasTo;
             submitBtn.disabled = !valid;
+
+            console.log('Progress:', completed + '/4', 'fromSelected:', fromSelected, 'toSelected:', toSelected, 'valid:', valid);
         }
 
-        // ============================================
-        // EMAIL VALIDATION
-        // ============================================
         function validateEmail(v) {
             return v.includes('@') && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
         }
@@ -1195,27 +884,31 @@
         // ============================================
         function setLocationStatus(type, status) {
             const el = document.getElementById(type + 'Status');
+            const input = document.getElementById(type + 'Input');
             if (status === 'loading') {
                 el.innerHTML = '<svg class="loc-spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
+                input.classList.remove('filled');
             } else if (status === 'success') {
                 el.innerHTML = '<svg class="loc-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                input.classList.add('filled');
             } else {
                 el.innerHTML = '';
+                input.classList.remove('filled');
             }
         }
 
         // ============================================
-        // MANUAL LOCATION
+        // MANUAL LOCATION TOGGLE
         // ============================================
         function setupManual(type) {
             const manualBtn = document.getElementById(type + 'ManualBtn');
             const manualWrapper = document.getElementById(type + 'ManualWrapper');
             const manualInput = document.getElementById(type + 'Manual');
             const backBtn = document.getElementById(type + 'BackBtn');
-            const wrapper = document.getElementById(type + 'Wrapper');
+            const mainInput = document.getElementById(type + 'Input');
 
             manualBtn.addEventListener('click', () => {
-                wrapper.style.display = 'none';
+                mainInput.parentElement.style.display = 'none';
                 manualWrapper.classList.add('show');
                 manualInput.focus();
                 if (type === 'from') { isFromManual = true; fromSelected = false; }
@@ -1225,7 +918,7 @@
             });
 
             backBtn.addEventListener('click', () => {
-                wrapper.style.display = 'block';
+                mainInput.parentElement.style.display = 'block';
                 manualWrapper.classList.remove('show');
                 manualInput.value = '';
                 if (type === 'from') { isFromManual = false; }
@@ -1247,134 +940,67 @@
         setupManual('to');
 
         // ============================================
-        // GOOGLE PLACES - Robust Implementation
+        // GOOGLE PLACES AUTOCOMPLETE
         // ============================================
-        let placesInitialized = false;
-        let placesReadyPromise = null;
+        function initAutocomplete() {
+            console.log('Initializing Google Places...');
 
-        async function initAutocomplete() {
-            console.log('Initializing Google Places with country:', userCountry);
-
-            const fromEl = document.getElementById('fromInput');
-            const toEl = document.getElementById('toInput');
-
-            if (!fromEl || !toEl) {
-                console.error('Place autocomplete elements not found');
-                return;
-            }
-
-            // Set country restrictions dynamically
-            try {
-                fromEl.componentRestrictions = { country: userCountry };
-                toEl.componentRestrictions = { country: userCountry };
-            } catch (e) {
-                console.log('Could not set country restrictions:', e);
-            }
-
-            // Helper function to handle place selection
-            function handlePlaceSelect(type, place) {
-                console.log(type.toUpperCase() + ' place object:', place);
-
-                if (type === 'from') {
-                    fromSelected = true;
-                    if (place) {
-                        fromLocationText = place.formattedAddress || place.displayName || place.name || '';
-                        if (place.location) {
-                            try {
-                                fromLatLng = place.location.lat() + ',' + place.location.lng();
-                            } catch (e) {
-                                fromLatLng = '';
-                            }
-                        }
-                    }
-                    console.log('FROM set:', fromLocationText, 'selected:', fromSelected);
-                } else {
-                    toSelected = true;
-                    if (place) {
-                        toLocationText = place.formattedAddress || place.displayName || place.name || '';
-                        if (place.location) {
-                            try {
-                                toLatLng = place.location.lat() + ',' + place.location.lng();
-                            } catch (e) {
-                                toLatLng = '';
-                            }
-                        }
-                    }
-                    console.log('TO set:', toLocationText, 'selected:', toSelected);
-                }
-
-                setLocationStatus(type, 'success');
-                updateProgress();
-            }
-
-            // FROM: Listen for gmp-placeselect event
-            fromEl.addEventListener('gmp-placeselect', async (e) => {
-                console.log('FROM gmp-placeselect fired');
-                setLocationStatus('from', 'loading');
-
-                try {
-                    const place = e.place;
-                    if (place && place.fetchFields) {
-                        await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
-                    }
-                    handlePlaceSelect('from', place);
-                } catch (err) {
-                    console.error('FROM fetchFields error:', err);
-                    // Still mark as selected
-                    handlePlaceSelect('from', null);
-                }
+            // FROM autocomplete
+            fromAutocomplete = new google.maps.places.Autocomplete(fromInput, {
+                componentRestrictions: { country: userCountry },
+                fields: ['formatted_address', 'name', 'geometry']
             });
 
-            // TO: Listen for gmp-placeselect event
-            toEl.addEventListener('gmp-placeselect', async (e) => {
-                console.log('TO gmp-placeselect fired');
-                setLocationStatus('to', 'loading');
+            fromAutocomplete.addListener('place_changed', () => {
+                const place = fromAutocomplete.getPlace();
+                console.log('FROM place_changed:', place);
 
-                try {
-                    const place = e.place;
-                    if (place && place.fetchFields) {
-                        await place.fetchFields({ fields: ['formattedAddress', 'displayName', 'location'] });
+                if (place && (place.formatted_address || place.name)) {
+                    fromLocationText = place.formatted_address || place.name || fromInput.value;
+                    if (place.geometry && place.geometry.location) {
+                        fromLatLng = place.geometry.location.lat() + ',' + place.geometry.location.lng();
                     }
-                    handlePlaceSelect('to', place);
-                } catch (err) {
-                    console.error('TO fetchFields error:', err);
-                    handlePlaceSelect('to', null);
-                }
-            });
-
-            // BACKUP: Also check for place_changed if using legacy API
-            if (fromEl.addEventListener) {
-                fromEl.addEventListener('place_changed', () => {
-                    console.log('FROM place_changed fired (legacy)');
                     fromSelected = true;
                     setLocationStatus('from', 'success');
-                    updateProgress();
-                });
-            }
-
-            if (toEl.addEventListener) {
-                toEl.addEventListener('place_changed', () => {
-                    console.log('TO place_changed fired (legacy)');
-                    toSelected = true;
-                    setLocationStatus('to', 'success');
-                    updateProgress();
-                });
-            }
-
-            // Monitor for clicks on pac-item (Google dropdown items)
-            document.addEventListener('click', (e) => {
-                if (e.target.closest('.pac-item')) {
-                    console.log('pac-item clicked');
-                    // Give time for the place to be set
-                    setTimeout(() => {
-                        updateProgress();
-                    }, 100);
+                    console.log('FROM saved:', fromLocationText);
+                } else {
+                    // User typed but didn't select - still allow
+                    fromLocationText = fromInput.value;
+                    fromSelected = true;
+                    setLocationStatus('from', 'success');
                 }
+                updateProgress();
             });
 
-            // Reset selection if user starts typing again
-            fromEl.addEventListener('input', () => {
-                if (fromSelected && !isFromManual) {
+            // TO autocomplete
+            toAutocomplete = new google.maps.places.Autocomplete(toInput, {
+                componentRestrictions: { country: userCountry },
+                fields: ['formatted_address', 'name', 'geometry']
+            });
+
+            toAutocomplete.addListener('place_changed', () => {
+                const place = toAutocomplete.getPlace();
+                console.log('TO place_changed:', place);
+
+                if (place && (place.formatted_address || place.name)) {
+                    toLocationText = place.formatted_address || place.name || toInput.value;
+                    if (place.geometry && place.geometry.location) {
+                        toLatLng = place.geometry.location.lat() + ',' + place.geometry.location.lng();
+                    }
+                    toSelected = true;
+                    setLocationStatus('to', 'success');
+                    console.log('TO saved:', toLocationText);
+                } else {
+                    toLocationText = toInput.value;
+                    toSelected = true;
+                    setLocationStatus('to', 'success');
+                }
+                updateProgress();
+            });
+
+            // Reset selection when user starts typing again
+            fromInput.addEventListener('input', () => {
+                if (fromSelected) {
                     fromSelected = false;
                     fromLocationText = '';
                     fromLatLng = '';
@@ -1383,8 +1009,8 @@
                 }
             });
 
-            toEl.addEventListener('input', () => {
-                if (toSelected && !isToManual) {
+            toInput.addEventListener('input', () => {
+                if (toSelected) {
                     toSelected = false;
                     toLocationText = '';
                     toLatLng = '';
@@ -1393,25 +1019,7 @@
                 }
             });
 
-            placesInitialized = true;
-            console.log('Google Places fully initialized');
-        }
-
-        // ============================================
-        // CHECK DUPLICATE
-        // ============================================
-        async function checkDuplicate(emailVal) {
-            try {
-                const res = await fetch(APPS_SCRIPT_URL + '?action=check&email=' + encodeURIComponent(emailVal) + '&ip=' + encodeURIComponent(userIP));
-                const data = await res.json();
-                if (data.exists) {
-                    existingSubmission = data.row;
-                    return true;
-                }
-            } catch (e) {
-                console.log('Duplicate check failed:', e);
-            }
-            return false;
+            console.log('Google Places ready');
         }
 
         // ============================================
@@ -1434,50 +1042,21 @@
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
-            // Check duplicate (skip if already chose to update/new)
-            if (!shouldUpdate && existingSubmission === null) {
-                const exists = await checkDuplicate(emailVal);
-                if (exists) {
-                    submitBtn.classList.remove('loading');
-                    submitBtn.disabled = false;
-                    updateModal.classList.add('show');
-                    return;
-                }
-            }
-
-            // Get location data
-            let finalFromLocation = '';
-            let finalFromLatLng = '';
-            let finalToLocation = '';
-            let finalToLatLng = '';
-
-            if (isFromManual) {
-                finalFromLocation = document.getElementById('fromManual').value.trim();
-                finalFromLatLng = '';
-            } else {
-                finalFromLocation = fromLocationText;
-                finalFromLatLng = fromLatLng;
-            }
-
-            if (isToManual) {
-                finalToLocation = document.getElementById('toManual').value.trim();
-                finalToLatLng = '';
-            } else {
-                finalToLocation = toLocationText;
-                finalToLatLng = toLatLng;
-            }
+            // Get final location data
+            let finalFromLocation = isFromManual ? document.getElementById('fromManual').value.trim() : (fromLocationText || fromInput.value);
+            let finalToLocation = isToManual ? document.getElementById('toManual').value.trim() : (toLocationText || toInput.value);
 
             const data = {
-                action: shouldUpdate ? 'update' : 'new',
+                action: 'new',
                 firstName: firstNameVal,
                 email: emailVal,
                 fromLocation: finalFromLocation,
-                fromLatLng: finalFromLatLng,
+                fromLatLng: fromLatLng,
                 toLocation: finalToLocation,
-                toLatLng: finalToLatLng,
+                toLatLng: toLatLng,
                 distance: distance,
                 ip: userIP,
-                country: userCountryName
+                country: userCountry
             };
 
             console.log('Submitting:', data);
@@ -1502,21 +1081,6 @@
             }
         });
 
-        // Modal handlers
-        document.getElementById('modalNew').addEventListener('click', () => {
-            updateModal.classList.remove('show');
-            shouldUpdate = false;
-            existingSubmission = 'checked';
-            form.dispatchEvent(new Event('submit'));
-        });
-
-        document.getElementById('modalUpdate').addEventListener('click', () => {
-            updateModal.classList.remove('show');
-            shouldUpdate = true;
-            existingSubmission = 'checked';
-            form.dispatchEvent(new Event('submit'));
-        });
-
         // ============================================
         // SHARE
         // ============================================
@@ -1531,12 +1095,12 @@
             });
         }
 
-        // Initial
+        // Initial progress
         updateProgress();
     </script>
 
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&v=beta&callback=initAutocomplete"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARzmbbhT0ki5-bZ-43pkkPyJNmOCTz4P0&libraries=places&callback=initAutocomplete"
         async defer></script>
 </body>
 
