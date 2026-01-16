@@ -804,25 +804,37 @@
         // ============================================
         // IP DETECTION (silent, just for saving)
         // ============================================
+        let ipLoaded = false;
+
         async function getIPInfo() {
             const apis = [
                 { url: 'https://ipapi.co/json/', parse: d => ({ ip: d.ip, cc: d.country_code }) },
                 { url: 'https://ipwho.is/', parse: d => ({ ip: d.ip, cc: d.country_code }) },
-                { url: 'https://ip-api.com/json/?fields=query,countryCode', parse: d => ({ ip: d.query, cc: d.countryCode }) }
+                { url: 'https://api.ipify.org?format=json', parse: d => ({ ip: d.ip, cc: 'ae' }) }
             ];
+
             for (const api of apis) {
                 try {
-                    const res = await fetch(api.url);
+                    const res = await fetch(api.url, { timeout: 3000 });
                     const data = await res.json();
                     const parsed = api.parse(data);
-                    if (parsed.cc) {
+                    if (parsed.ip) {
                         userIP = parsed.ip || '';
-                        userCountry = parsed.cc.toLowerCase();
-                        console.log('IP:', userIP, 'Country:', userCountry);
+                        userCountry = (parsed.cc || 'ae').toLowerCase();
+                        ipLoaded = true;
+                        console.log('IP loaded:', userIP, 'Country:', userCountry);
                         return;
                     }
-                } catch (e) { }
+                } catch (e) {
+                    console.log('IP API failed:', api.url);
+                }
             }
+
+            // Fallback - generate a random ID if IP detection fails
+            userIP = 'unknown-' + Date.now();
+            userCountry = 'ae';
+            ipLoaded = true;
+            console.log('IP fallback:', userIP);
         }
         getIPInfo();
 
@@ -1085,16 +1097,22 @@
                 toLocation: finalToLocation,
                 toLatLng: toLatLng,
                 distance: distance,
-                ip: userIP,
-                country: userCountry,
+                ip: userIP || 'unknown',
+                country: userCountry || 'ae',
                 // Include previous values for comparison (for bold formatting)
                 prevFirstName: previousSubmission ? previousSubmission.firstName : '',
                 prevFromLocation: previousSubmission ? previousSubmission.fromLocation : '',
                 prevToLocation: previousSubmission ? previousSubmission.toLocation : '',
-                prevDistance: previousSubmission ? previousSubmission.distance : ''
+                prevDistance: previousSubmission ? previousSubmission.distance : '',
+                prevEmail: previousSubmission ? previousSubmission.email : ''
             };
 
-            console.log('Submitting:', data);
+            console.log('=== SUBMIT DEBUG ===');
+            console.log('isEditMode:', isEditMode);
+            console.log('action:', data.action);
+            console.log('userIP:', userIP);
+            console.log('Full data:', JSON.stringify(data));
+            console.log('====================');
 
             try {
                 // Fire and forget - don't wait for response (speed optimization)
