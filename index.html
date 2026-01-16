@@ -43,30 +43,11 @@
             min-height: 100vh;
         }
 
-        /* Progress Bar */
-        .progress-bar-fixed {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: rgba(0, 0, 0, 0.05);
-            z-index: 1000;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
         /* Page */
         .page {
             padding: 24px 16px 60px;
             max-width: 480px;
             margin: 0 auto;
-            padding-top: 20px;
         }
 
         .header {
@@ -75,16 +56,17 @@
         }
 
         .logo {
-            max-width: 200px;
+            max-width: 280px;
             width: 100%;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .tagline {
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary-dark);
             margin-bottom: 8px;
+            font-style: italic;
         }
 
         .description {
@@ -101,7 +83,7 @@
         }
 
         .section {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .section:last-of-type {
@@ -112,7 +94,7 @@
             font-size: 15px;
             font-weight: 600;
             color: var(--text);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -126,7 +108,7 @@
 
         /* Inputs */
         .input-group {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .input-group:last-child {
@@ -142,6 +124,7 @@
 
         .label .req {
             color: var(--error);
+            margin-left: 2px;
         }
 
         .input {
@@ -184,6 +167,16 @@
             font-size: 13px;
             color: var(--text-muted);
             margin-bottom: 8px;
+        }
+
+        .privacy-note {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            padding: 10px;
+            background: #fef3c7;
+            border-radius: 6px;
+            border-left: 3px solid #f59e0b;
         }
 
         /* Location */
@@ -249,31 +242,6 @@
             border-color: var(--success);
         }
 
-        .manual-link {
-            font-size: 13px;
-            color: var(--primary);
-            cursor: pointer;
-            margin-top: 8px;
-            display: inline-block;
-        }
-
-        .manual-wrapper {
-            display: none;
-            margin-top: 12px;
-        }
-
-        .manual-wrapper.show {
-            display: block;
-        }
-
-        .back-link {
-            font-size: 13px;
-            color: var(--text-muted);
-            cursor: pointer;
-            margin-top: 6px;
-            display: inline-block;
-        }
-
         /* Google Places dropdown */
         .pac-container {
             max-height: 200px !important;
@@ -295,52 +263,61 @@
             background: #f0fdf4 !important;
         }
 
-        /* Distance */
-        .distance-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+        /* Distance Slider */
+        .distance-slider-wrapper {
+            margin-top: 8px;
         }
 
-        .distance-option {
-            position: relative;
-        }
-
-        .distance-option input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .distance-card {
-            display: block;
-            padding: 14px;
-            text-align: center;
-            background: var(--bg);
-            border: 2px solid transparent;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .distance-card:hover {
-            border-color: var(--border);
-        }
-
-        .distance-option input:checked+.distance-card {
-            border-color: var(--primary);
-            background: rgba(22, 163, 74, 0.05);
-        }
-
-        .distance-name {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 2px;
-        }
-
-        .distance-range {
+        .distance-labels {
+            display: flex;
+            justify-content: space-between;
             font-size: 12px;
             color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .distance-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .distance-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .distance-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .distance-value {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+            margin-top: 8px;
+        }
+
+        .distance-skip {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 6px;
         }
 
         /* Submit */
@@ -482,68 +459,6 @@
             cursor: pointer;
         }
 
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 9998;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 360px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .modal-text {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-        }
-
-        .modal-btn.primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .modal-btn.secondary {
-            background: var(--bg);
-            border: 1px solid var(--border);
-        }
-
         /* Footer */
         .footer {
             text-align: center;
@@ -564,7 +479,7 @@
             }
 
             .logo {
-                max-width: 160px;
+                max-width: 240px;
             }
 
             .tagline {
@@ -574,37 +489,15 @@
             .form-card {
                 padding: 20px 16px;
             }
-
-            .distance-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 
 <body>
-    <!-- Progress Bar -->
-    <div class="progress-bar-fixed">
-        <div class="progress-bar-fill" id="progressFill"></div>
-    </div>
-
-    <!-- Update Modal -->
-    <div class="modal-overlay" id="updateModal">
-        <div class="modal-content">
-            <h3 class="modal-title">Welcome Back!</h3>
-            <p class="modal-text">We found an existing submission with this email. Would you like to update your
-                previous entry or create a new one?</p>
-            <div class="modal-buttons">
-                <button class="modal-btn secondary" id="modalNew">Create New</button>
-                <button class="modal-btn primary" id="modalUpdate">Update Previous</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Page -->
     <div class="page">
         <header class="header">
-            <img src="Community_Carpool_Logo.jpg" alt="Community Carpool" class="logo" />
+            <img src="Community_Carpool_Logo.png" alt="Community Carpool" class="logo" />
             <h1 class="tagline">Share rides. Cut emissions.</h1>
             <p class="description">Match with people on similar routes. Contact shared only after a match.</p>
         </header>
@@ -621,13 +514,13 @@
                     Your Details
                 </h2>
                 <div class="input-group">
-                    <label class="label">First Name</label>
-                    <input type="text" id="firstName" class="input" placeholder="Your first name" />
+                    <label class="label">First Name<span class="req">*</span></label>
+                    <input type="text" id="firstName" class="input" placeholder="Your first name" required />
                 </div>
                 <div class="input-group">
-                    <label class="label">Email <span class="req">*</span></label>
-                    <input type="email" id="email" class="input" placeholder="you@example.com" />
-                    <p id="emailError" class="error-msg">Please enter a valid email with @</p>
+                    <label class="label">Email<span class="req">*</span></label>
+                    <input type="email" id="email" class="input" placeholder="you@example.com" required />
+                    <p id="emailError" class="error-msg">Please enter a valid email</p>
                 </div>
             </div>
 
@@ -640,19 +533,17 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    Starting Location
+                    From<span class="req">*</span>
                 </h2>
                 <div class="input-group">
-                    <p class="helper">Search or enter manually</p>
                     <div class="location-wrapper">
-                        <input type="text" id="fromInput" class="place-input" placeholder="Search your area"
-                            autocomplete="off" />
+                        <input type="text" id="fromInput" class="place-input"
+                            placeholder="Search your area or community" autocomplete="off" required />
                         <div class="location-status" id="fromStatus"></div>
                     </div>
-                    <span class="manual-link" id="fromManualBtn">Cannot find it? Enter manually</span>
-                    <div class="manual-wrapper" id="fromManualWrapper">
-                        <input type="text" id="fromManual" class="input" placeholder="Type your location" />
-                        <span class="back-link" id="fromBackBtn">Back to search</span>
+                    <div class="privacy-note">
+                        ⚠️ Enter only your area or community (e.g., Alma - Arabian Ranches). <strong>Do not include
+                            street or villa numbers.</strong>
                     </div>
                 </div>
             </div>
@@ -664,66 +555,40 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                     </svg>
-                    Destination
+                    To<span class="req">*</span>
                 </h2>
                 <div class="input-group">
-                    <p class="helper">Where are you heading?</p>
                     <div class="location-wrapper">
-                        <input type="text" id="toInput" class="place-input" placeholder="Search destination"
-                            autocomplete="off" />
+                        <input type="text" id="toInput" class="place-input" placeholder="Search your destination"
+                            autocomplete="off" required />
                         <div class="location-status" id="toStatus"></div>
-                    </div>
-                    <span class="manual-link" id="toManualBtn">Cannot find it? Enter manually</span>
-                    <div class="manual-wrapper" id="toManualWrapper">
-                        <input type="text" id="toManual" class="input" placeholder="Type your destination" />
-                        <span class="back-link" id="toBackBtn">Back to search</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Distance -->
+            <!-- Distance (Optional) -->
             <div class="section">
                 <h2 class="section-title">
                     <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                     </svg>
-                    Match Distance
+                    Match Distance (Optional)
                 </h2>
-                <div class="distance-grid">
-                    <div class="distance-option">
-                        <input type="radio" id="dist1" name="distance" value="0-1" />
-                        <label class="distance-card" for="dist1">
-                            <div class="distance-name">Very Close</div>
-                            <div class="distance-range">0 to 1 km</div>
-                        </label>
+                <p class="helper">How far from your location can a potential match be?</p>
+                <div class="distance-slider-wrapper">
+                    <div class="distance-labels">
+                        <span>Closer</span>
+                        <span>Further</span>
                     </div>
-                    <div class="distance-option">
-                        <input type="radio" id="dist2" name="distance" value="1-3" checked />
-                        <label class="distance-card" for="dist2">
-                            <div class="distance-name">Nearby</div>
-                            <div class="distance-range">1 to 3 km</div>
-                        </label>
-                    </div>
-                    <div class="distance-option">
-                        <input type="radio" id="dist3" name="distance" value="3-5" />
-                        <label class="distance-card" for="dist3">
-                            <div class="distance-name">Local Area</div>
-                            <div class="distance-range">3 to 5 km</div>
-                        </label>
-                    </div>
-                    <div class="distance-option">
-                        <input type="radio" id="dist4" name="distance" value="5-8" />
-                        <label class="distance-card" for="dist4">
-                            <div class="distance-name">Flexible</div>
-                            <div class="distance-range">5 to 8 km</div>
-                        </label>
-                    </div>
+                    <input type="range" id="distanceSlider" class="distance-slider" min="1" max="8" value="3" />
+                    <div class="distance-value" id="distanceValue">Up to 3 km</div>
+                    <div class="distance-skip">Leave at default if unsure</div>
                 </div>
             </div>
 
             <button type="submit" id="submitBtn" class="submit-btn" disabled>
-                <span class="btn-text">Continue</span>
+                <span class="btn-text">Register My Journey</span>
                 <span class="btn-spinner"></span>
             </button>
         </form>
@@ -735,22 +600,22 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
-            <h2 class="success-title">You are registered!</h2>
+            <h2 class="success-title">You're in the Pool!</h2>
             <p class="success-text">
-                Check your email for your carbon footprint estimate.<br>
-                We will notify you when we find a match for your route.
+                Check your email for your carbon footprint estimate and an edit link.<br>
+                We'll notify you when we find a match for your route.
             </p>
             <div class="share-section">
                 <div class="share-title">Get matched faster by sharing!</div>
                 <div class="share-buttons">
-                    <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+                    <button type="button" class="share-btn whatsapp" onclick="shareWhatsApp()">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                         </svg>
                         WhatsApp
                     </button>
-                    <button class="share-btn copy" onclick="copyLink()">
+                    <button type="button" class="share-btn copy" onclick="copyLink()">
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -759,11 +624,11 @@
                     </button>
                 </div>
             </div>
-            <button class="another-btn" onclick="location.reload()">Submit Another</button>
+            <button type="button" class="another-btn" onclick="location.reload()">Register Another Journey</button>
         </div>
 
         <footer class="footer">
-            We do not provide transport. All arrangements are private.<br>
+            We do not provide transport. All arrangements are private and at your own responsibility.<br>
             <a href="https://tally.so/r/Xxoqxz" target="_blank">Questions? Contact us</a>
         </footer>
     </div>
@@ -781,11 +646,9 @@
         let fromLocationText = '', toLocationText = '';
         let fromLatLng = '', toLatLng = '';
         let fromSelected = false, toSelected = false;
-        let isFromManual = false, isToManual = false;
         let userIP = '', userCountry = 'ae';
         let fromAutocomplete = null, toAutocomplete = null;
-        let isEditMode = false;
-        let previousSubmission = null;
+        let editToken = null; // For editing via URL
 
         // ============================================
         // DOM
@@ -795,17 +658,58 @@
         const email = document.getElementById('email');
         const emailError = document.getElementById('emailError');
         const submitBtn = document.getElementById('submitBtn');
-        const progressFill = document.getElementById('progressFill');
         const successScreen = document.getElementById('successScreen');
-        const updateModal = document.getElementById('updateModal');
         const fromInput = document.getElementById('fromInput');
         const toInput = document.getElementById('toInput');
+        const distanceSlider = document.getElementById('distanceSlider');
+        const distanceValue = document.getElementById('distanceValue');
 
         // ============================================
-        // IP DETECTION (silent, just for saving)
+        // CHECK FOR EDIT TOKEN IN URL
         // ============================================
-        let ipLoaded = false;
+        function checkEditToken() {
+            const params = new URLSearchParams(window.location.search);
+            editToken = params.get('edit');
+            if (editToken) {
+                console.log('Edit token found:', editToken);
+                // Fetch existing data and pre-fill form
+                loadFormData(editToken);
+            }
+        }
 
+        async function loadFormData(token) {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL + '?action=getByToken&token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.found) {
+                    firstName.value = data.firstName || '';
+                    email.value = data.email || '';
+                    fromInput.value = data.fromLocation || '';
+                    toInput.value = data.toLocation || '';
+                    fromLocationText = data.fromLocation || '';
+                    toLocationText = data.toLocation || '';
+                    fromSelected = true;
+                    toSelected = true;
+                    if (data.distance) {
+                        const dist = parseInt(data.distance.split('-')[1] || data.distance);
+                        distanceSlider.value = dist;
+                        updateDistanceLabel();
+                    }
+                    setLocationStatus('from', 'success');
+                    setLocationStatus('to', 'success');
+                    updateProgress();
+                    submitBtn.textContent = 'Update My Journey';
+                }
+            } catch (e) {
+                console.log('Could not load form data:', e);
+            }
+        }
+
+        checkEditToken();
+
+        // ============================================
+        // IP DETECTION
+        // ============================================
         async function getIPInfo() {
             const apis = [
                 { url: 'https://ipapi.co/json/', parse: d => ({ ip: d.ip, cc: d.country_code }) },
@@ -815,57 +719,41 @@
 
             for (const api of apis) {
                 try {
-                    const res = await fetch(api.url, { timeout: 3000 });
+                    const res = await fetch(api.url);
                     const data = await res.json();
                     const parsed = api.parse(data);
                     if (parsed.ip) {
                         userIP = parsed.ip || '';
                         userCountry = (parsed.cc || 'ae').toLowerCase();
-                        ipLoaded = true;
-                        console.log('IP loaded:', userIP, 'Country:', userCountry);
+                        console.log('IP:', userIP, 'Country:', userCountry);
                         return;
                     }
-                } catch (e) {
-                    console.log('IP API failed:', api.url);
-                }
+                } catch (e) { }
             }
-
-            // Fallback - generate a random ID if IP detection fails
             userIP = 'unknown-' + Date.now();
             userCountry = 'ae';
-            ipLoaded = true;
-            console.log('IP fallback:', userIP);
         }
         getIPInfo();
+
+        // ============================================
+        // DISTANCE SLIDER
+        // ============================================
+        function updateDistanceLabel() {
+            distanceValue.textContent = 'Up to ' + distanceSlider.value + ' km';
+        }
+        distanceSlider.addEventListener('input', updateDistanceLabel);
 
         // ============================================
         // PROGRESS & VALIDATION
         // ============================================
         function updateProgress() {
-            let completed = 0;
-            const total = 4;
+            const hasName = firstName.value.trim().length > 0;
+            const hasEmail = email.value.includes('@');
+            const hasFrom = fromSelected || fromInput.value.trim().length > 3;
+            const hasTo = toSelected || toInput.value.trim().length > 3;
 
-            // 1. Details
-            if (firstName.value.trim() && email.value.includes('@')) completed++;
-
-            // 2. From location
-            const hasFrom = fromSelected || (isFromManual && document.getElementById('fromManual').value.trim());
-            if (hasFrom) completed++;
-
-            // 3. To location
-            const hasTo = toSelected || (isToManual && document.getElementById('toManual').value.trim());
-            if (hasTo) completed++;
-
-            // 4. Distance (always has default)
-            completed++;
-
-            progressFill.style.width = (completed / total * 100) + '%';
-
-            // Enable submit when all filled
-            const valid = firstName.value.trim() && email.value.includes('@') && hasFrom && hasTo;
+            const valid = hasName && hasEmail && hasFrom && hasTo;
             submitBtn.disabled = !valid;
-
-            console.log('Progress:', completed + '/4', 'fromSelected:', fromSelected, 'toSelected:', toSelected, 'valid:', valid);
         }
 
         function validateEmail(v) {
@@ -892,6 +780,8 @@
         });
 
         firstName.addEventListener('input', updateProgress);
+        fromInput.addEventListener('input', updateProgress);
+        toInput.addEventListener('input', updateProgress);
 
         // ============================================
         // LOCATION STATUS ICONS
@@ -912,156 +802,83 @@
         }
 
         // ============================================
-        // MANUAL LOCATION TOGGLE
-        // ============================================
-        function setupManual(type) {
-            const manualBtn = document.getElementById(type + 'ManualBtn');
-            const manualWrapper = document.getElementById(type + 'ManualWrapper');
-            const manualInput = document.getElementById(type + 'Manual');
-            const backBtn = document.getElementById(type + 'BackBtn');
-            const mainInput = document.getElementById(type + 'Input');
-
-            manualBtn.addEventListener('click', () => {
-                mainInput.parentElement.style.display = 'none';
-                manualWrapper.classList.add('show');
-                manualInput.focus();
-                if (type === 'from') { isFromManual = true; fromSelected = false; }
-                else { isToManual = true; toSelected = false; }
-                setLocationStatus(type, '');
-                updateProgress();
-            });
-
-            backBtn.addEventListener('click', () => {
-                mainInput.parentElement.style.display = 'block';
-                manualWrapper.classList.remove('show');
-                manualInput.value = '';
-                if (type === 'from') { isFromManual = false; }
-                else { isToManual = false; }
-                updateProgress();
-            });
-
-            manualInput.addEventListener('input', () => {
-                if (manualInput.value.trim()) {
-                    setLocationStatus(type, 'success');
-                } else {
-                    setLocationStatus(type, '');
-                }
-                updateProgress();
-            });
-        }
-
-        setupManual('from');
-        setupManual('to');
-
-        // ============================================
         // GOOGLE PLACES AUTOCOMPLETE
         // ============================================
-
-        // Country center coordinates for biasing (lat, lng, radius in km)
         const COUNTRY_CENTERS = {
-            'ae': { lat: 24.4539, lng: 54.3773, name: 'UAE' },
-            'us': { lat: 37.0902, lng: -95.7129, name: 'USA' },
-            'uk': { lat: 51.5074, lng: -0.1278, name: 'UK' },
-            'gb': { lat: 51.5074, lng: -0.1278, name: 'UK' },
-            'in': { lat: 20.5937, lng: 78.9629, name: 'India' },
-            'sa': { lat: 23.8859, lng: 45.0792, name: 'Saudi Arabia' },
-            'eg': { lat: 26.8206, lng: 30.8025, name: 'Egypt' },
-            'pk': { lat: 30.3753, lng: 69.3451, name: 'Pakistan' },
-            'qa': { lat: 25.3548, lng: 51.1839, name: 'Qatar' },
-            'kw': { lat: 29.3117, lng: 47.4818, name: 'Kuwait' },
-            'bh': { lat: 26.0667, lng: 50.5577, name: 'Bahrain' },
-            'om': { lat: 21.4735, lng: 55.9754, name: 'Oman' }
+            'ae': { lat: 24.4539, lng: 54.3773 },
+            'us': { lat: 37.0902, lng: -95.7129 },
+            'uk': { lat: 51.5074, lng: -0.1278 },
+            'gb': { lat: 51.5074, lng: -0.1278 },
+            'in': { lat: 20.5937, lng: 78.9629 },
+            'sa': { lat: 23.8859, lng: 45.0792 },
+            'eg': { lat: 26.8206, lng: 30.8025 },
+            'pk': { lat: 30.3753, lng: 69.3451 },
+            'qa': { lat: 25.3548, lng: 51.1839 },
+            'kw': { lat: 29.3117, lng: 47.4818 }
         };
 
         function initAutocomplete() {
-            console.log('Initializing Google Places with country bias:', userCountry);
-
-            // Get bias location for user's country
             const countryCenter = COUNTRY_CENTERS[userCountry] || COUNTRY_CENTERS['ae'];
-
-            // Create a circle bounds around the country center (500km radius)
             const circle = new google.maps.Circle({
                 center: { lat: countryCenter.lat, lng: countryCenter.lng },
-                radius: 500000 // 500km in meters
+                radius: 500000
             });
             const bounds = circle.getBounds();
 
-            // Options with types but no restrictions
-            const autocompleteOptions = {
+            const options = {
                 fields: ['formatted_address', 'name', 'geometry'],
                 types: ['geocode', 'establishment']
             };
 
-            // FROM autocomplete
-            fromAutocomplete = new google.maps.places.Autocomplete(fromInput, autocompleteOptions);
-            fromAutocomplete.setBounds(bounds); // Bias towards country
-
+            // FROM
+            fromAutocomplete = new google.maps.places.Autocomplete(fromInput, options);
+            fromAutocomplete.setBounds(bounds);
             fromAutocomplete.addListener('place_changed', () => {
                 const place = fromAutocomplete.getPlace();
-                console.log('FROM place_changed:', place);
-
                 if (place && (place.formatted_address || place.name)) {
-                    fromLocationText = place.formatted_address || place.name || fromInput.value;
+                    fromLocationText = place.formatted_address || place.name;
                     if (place.geometry && place.geometry.location) {
                         fromLatLng = place.geometry.location.lat() + ',' + place.geometry.location.lng();
                     }
                     fromSelected = true;
                     setLocationStatus('from', 'success');
-                    console.log('FROM saved:', fromLocationText);
-                } else {
-                    fromLocationText = fromInput.value;
-                    fromSelected = true;
-                    setLocationStatus('from', 'success');
                 }
                 updateProgress();
             });
 
-            // TO autocomplete
-            toAutocomplete = new google.maps.places.Autocomplete(toInput, autocompleteOptions);
-            toAutocomplete.setBounds(bounds); // Bias towards country
-
+            // TO
+            toAutocomplete = new google.maps.places.Autocomplete(toInput, options);
+            toAutocomplete.setBounds(bounds);
             toAutocomplete.addListener('place_changed', () => {
                 const place = toAutocomplete.getPlace();
-                console.log('TO place_changed:', place);
-
                 if (place && (place.formatted_address || place.name)) {
-                    toLocationText = place.formatted_address || place.name || toInput.value;
+                    toLocationText = place.formatted_address || place.name;
                     if (place.geometry && place.geometry.location) {
                         toLatLng = place.geometry.location.lat() + ',' + place.geometry.location.lng();
                     }
                     toSelected = true;
                     setLocationStatus('to', 'success');
-                    console.log('TO saved:', toLocationText);
-                } else {
-                    toLocationText = toInput.value;
-                    toSelected = true;
-                    setLocationStatus('to', 'success');
                 }
                 updateProgress();
             });
 
-            // Reset selection when user starts typing again
+            // Reset on type
             fromInput.addEventListener('input', () => {
                 if (fromSelected) {
                     fromSelected = false;
                     fromLocationText = '';
                     fromLatLng = '';
                     setLocationStatus('from', '');
-                    updateProgress();
                 }
             });
-
             toInput.addEventListener('input', () => {
                 if (toSelected) {
                     toSelected = false;
                     toLocationText = '';
                     toLatLng = '';
                     setLocationStatus('to', '');
-                    updateProgress();
                 }
             });
-
-            console.log('Google Places ready');
         }
 
         // ============================================
@@ -1072,7 +889,7 @@
 
             const firstNameVal = firstName.value.trim();
             const emailVal = email.value.trim();
-            const distance = document.querySelector('input[name="distance"]:checked').value;
+            const distance = distanceSlider.value;
 
             if (!validateEmail(emailVal)) {
                 emailError.classList.add('show');
@@ -1084,12 +901,12 @@
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
-            // Get final location data
-            let finalFromLocation = isFromManual ? document.getElementById('fromManual').value.trim() : (fromLocationText || fromInput.value);
-            let finalToLocation = isToManual ? document.getElementById('toManual').value.trim() : (toLocationText || toInput.value);
+            const finalFromLocation = fromLocationText || fromInput.value.trim();
+            const finalToLocation = toLocationText || toInput.value.trim();
 
             const data = {
-                action: isEditMode ? 'update' : 'new',
+                action: editToken ? 'update' : 'new',
+                editToken: editToken || '',
                 firstName: firstNameVal,
                 email: emailVal,
                 fromLocation: finalFromLocation,
@@ -1098,24 +915,12 @@
                 toLatLng: toLatLng,
                 distance: distance,
                 ip: userIP || 'unknown',
-                country: userCountry || 'ae',
-                // Include previous values for comparison (for bold formatting)
-                prevFirstName: previousSubmission ? previousSubmission.firstName : '',
-                prevFromLocation: previousSubmission ? previousSubmission.fromLocation : '',
-                prevToLocation: previousSubmission ? previousSubmission.toLocation : '',
-                prevDistance: previousSubmission ? previousSubmission.distance : '',
-                prevEmail: previousSubmission ? previousSubmission.email : ''
+                country: userCountry || 'ae'
             };
 
-            console.log('=== SUBMIT DEBUG ===');
-            console.log('isEditMode:', isEditMode);
-            console.log('action:', data.action);
-            console.log('userIP:', userIP);
-            console.log('Full data:', JSON.stringify(data));
-            console.log('====================');
+            console.log('Submitting:', data);
 
             try {
-                // Fire and forget - don't wait for response (speed optimization)
                 fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -1123,21 +928,8 @@
                     body: JSON.stringify(data)
                 });
 
-                // Save to localStorage for future detection (include email for update matching)
-                localStorage.setItem('carpoolSubmission', JSON.stringify({
-                    firstName: firstNameVal,
-                    email: emailVal,
-                    fromLocation: finalFromLocation,
-                    toLocation: finalToLocation,
-                    distance: distance,
-                    ip: userIP,
-                    timestamp: new Date().toISOString()
-                }));
-
-                // Show success immediately (don't wait for server)
                 form.style.display = 'none';
                 successScreen.classList.add('show');
-                progressFill.style.width = '100%';
 
             } catch (err) {
                 console.error('Submit error:', err);
@@ -1151,7 +943,7 @@
         // SHARE
         // ============================================
         function shareWhatsApp() {
-            const text = encodeURIComponent('Join Community Carpool! Match with neighbors on similar routes and reduce emissions together. Sign up here: ' + SHARE_URL);
+            const text = encodeURIComponent('Join Community Carpool! Match with neighbors on similar routes and reduce emissions together. Sign up: ' + SHARE_URL);
             window.open('https://wa.me/?text=' + text, '_blank');
         }
 
@@ -1161,58 +953,8 @@
             });
         }
 
-        // ============================================
-        // CHECK FOR PREVIOUS SUBMISSION
-        // ============================================
-        function checkPreviousSubmission() {
-            const saved = localStorage.getItem('carpoolSubmission');
-            if (saved) {
-                try {
-                    previousSubmission = JSON.parse(saved);
-                    console.log('Found previous submission:', previousSubmission);
-                    // Show the edit modal
-                    updateModal.classList.add('show');
-                } catch (e) {
-                    console.log('Could not parse saved submission');
-                }
-            }
-        }
-
-        // Modal handlers
-        document.getElementById('modalNew').addEventListener('click', () => {
-            updateModal.classList.remove('show');
-            isEditMode = false;
-            previousSubmission = null;
-            localStorage.removeItem('carpoolSubmission');
-        });
-
-        document.getElementById('modalUpdate').addEventListener('click', () => {
-            updateModal.classList.remove('show');
-            isEditMode = true;
-            // Pre-fill form with previous values
-            if (previousSubmission) {
-                firstName.value = previousSubmission.firstName || '';
-                email.value = previousSubmission.email || '';
-                fromInput.value = previousSubmission.fromLocation || '';
-                toInput.value = previousSubmission.toLocation || '';
-                fromLocationText = previousSubmission.fromLocation || '';
-                toLocationText = previousSubmission.toLocation || '';
-                fromSelected = true;
-                toSelected = true;
-                setLocationStatus('from', 'success');
-                setLocationStatus('to', 'success');
-                // Set distance
-                const distRadio = document.querySelector(`input[name="distance"][value="${previousSubmission.distance}"]`);
-                if (distRadio) distRadio.checked = true;
-                updateProgress();
-            }
-        });
-
-        // Initial progress
+        // Initial
         updateProgress();
-
-        // Check for previous submission after page loads
-        setTimeout(checkPreviousSubmission, 500);
     </script>
 
     <script
