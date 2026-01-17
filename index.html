@@ -55,18 +55,12 @@
         .header {
             text-align: center;
             margin-bottom: 24px;
-            position: relative;
-            padding-top: 40px;
-            /* Space for toggles */
         }
 
         .logo {
-            max-width: 250px;
+            max-width: 280px;
             width: 100%;
-            margin-bottom: 12px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            margin-bottom: 16px;
         }
 
         .tagline {
@@ -503,10 +497,12 @@
         /* Language Toggle */
         .lang-toggle {
             position: absolute;
-            top: 0;
-            right: 0;
-            background: transparent;
-            border: none;
+            top: 24px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
             padding: 4px;
             display: flex;
             gap: 4px;
@@ -564,11 +560,12 @@
 <body>
     <!-- Main Page -->
     <div class="page">
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('ar')">عربي</button>
+        </div>
+
         <header class="header">
-            <div class="lang-toggle">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('ar')">عربي</button>
-            </div>
             <img src="Community_Carpool_Logo.png" alt="Community Carpool" class="logo" />
             <h1 class="tagline" data-i18n="tagline">Share rides. Cut emissions.</h1>
             <p class="description" data-i18n="desc">Match with people on similar routes. Contact shared only after a
@@ -710,9 +707,6 @@
         // ============================================
         // TRANSLATIONS
         // ============================================
-        // ============================================
-        // TRANSLATIONS
-        // ============================================
         const translations = {
             en: {
                 tagline: "Share rides. Cut emissions.",
@@ -734,9 +728,7 @@
                 successText: "Check your email for your carbon footprint estimate and an edit link.<br>We'll notify you when we find a match for your route.",
                 shareTitle: "Get matched faster by sharing!",
                 shareBtn: "Share App",
-                registerAnother: "Register Another Journey",
-                questions: "Questions? Contact us",
-                upTo: "Up to"
+                registerAnother: "Register Another Journey"
             },
             ar: {
                 tagline: "شارك الرحلة. قلل الانبعاثات.",
@@ -758,9 +750,7 @@
                 successText: "تحقق من بريدك الإلكتروني لمعرفة تقدير بصمتك الكربونية ورابط التعديل.<br>سنخطرك عندما نجد تطابقاً لمسارك.",
                 shareTitle: "اعثر على تطابق أسرع عبر المشاركة!",
                 shareBtn: "شارك التطبيق",
-                registerAnother: "سجل رحلة أخرى",
-                questions: "أسئلة؟ تواصل معنا",
-                upTo: "حتى"
+                registerAnother: "سجل رحلة أخرى"
             }
         };
 
@@ -1132,8 +1122,7 @@
                 toLatLng: toLatLng,
                 distance: distance,
                 ip: userIP || 'unknown',
-                country: userCountry || 'ae',
-                lang: currentLang
+                country: userCountry || 'ae'
             };
 
             console.log('Submitting:', data);
@@ -1148,7 +1137,6 @@
 
                 // Hide form and show success
                 document.getElementById('form').style.display = 'none';
-                document.querySelector('.header').style.display = 'none';
                 document.getElementById('successScreen').classList.add('show');
                 console.log('Success screen shown');
 
@@ -1159,6 +1147,20 @@
                 submitBtn.disabled = false;
             }
         });
+
+        // ============================================
+        // SHARE
+        // ============================================
+        function shareWhatsApp() {
+            const text = encodeURIComponent('Join Community Carpool! Match with neighbors on similar routes and reduce emissions together. Sign up: ' + SHARE_URL);
+            window.open('https://wa.me/?text=' + text, '_blank');
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(SHARE_URL).then(() => {
+                alert('Link copied!');
+            });
+        }
 
         // Initial
         updateProgress();
