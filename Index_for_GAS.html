@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Community Carpool | Share Rides. Cut Emissions.</title>
+    <meta name="description" content="Match with people on similar routes to carpool voluntarily." />
+    <!-- Dynamic URL derived from Apps Script -->
+    <script>
+        // This handles the URL automatically when served from Apps Script
+        const APPS_SCRIPT_URL = "<?= ScriptApp.getService().getUrl() ?>";
+    </script>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #16a34a;
+            --primary-light: #22c55e;
+            --primary-dark: #15803d;
+            --bg: #fafafa;
+            --card: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --error: #dc2626;
+            --success: #16a34a;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .page {
+            padding: 24px 16px 60px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            max-width: 280px;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .tagline {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .form-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+        }
+
+        .label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .label .req {
+            color: var(--error);
+            margin-left: 2px;
+        }
+
+        .input,
+        .place-input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            transition: all 0.2s;
+        }
+
+        .input:focus,
+        .place-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+        }
+
+        .error-msg {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        .location-wrapper {
+            position: relative;
+        }
+
+        .location-status {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-screen.show {
+            display: block;
+        }
+
+        .pac-container {
+            z-index: 10000 !important;
+        }
+
+        /* Helpers */
+        .btn-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .submit-btn.loading .btn-text {
+            display: none;
+        }
+
+        .submit-btn.loading .btn-spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header class="header">
+            <!-- Replace with your hosted logo or base64 if needed, keeping placeholder -->
+            <img src="https://via.placeholder.com/150x50?text=Community+Carpool" alt="Community Carpool" class="logo"
+                style="height:50px; object-fit:contain;" />
+            <h1 class="tagline">Share rides. Cut emissions.</h1>
+        </header>
+
+        <form id="form" class="form-card">
+            <div class="section">
+                <h2 class="section-title">👤 <span>Your Details</span></h2>
+                <div class="input-group">
+                    <label class="label">First Name<span class="req">*</span></label>
+                    <input type="text" id="firstName" class="input" placeholder="Your first name" />
+                </div>
+                <div class="input-group">
+                    <label class="label">Email<span class="req">*</span></label>
+                    <input type="email" id="email" class="input" placeholder="you@example.com" />
+                    <p id="emailError" class="error-msg">Please enter a valid email</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📍 <span>From</span><span class="req">*</span></h2>
+                <div class="input-group">
+                    <div class="location-wrapper">
+                        <input type="text" id="fromInput" class="place-input"
+                            placeholder="Search area (start typing...)" />
+                        <div class="location-status" id="fromStatus"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">🏁 <span>To</span><span class="req">*</span></h2>
+                <div class="input-group">
+                    <div class="location-wrapper">
+                        <input type="text" id="toInput" class="place-input"
+                            placeholder="Search destination (start typing...)" />
+                        <div class="location-status" id="toStatus"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <label class="label">Match Distance (Radius)</label>
+                <input type="range" id="distanceSlider" style="width:100%" min="1" max="8" value="3" />
+                <div style="text-align:center;color:#16a34a;font-weight:bold;margin-top:5px;" id="distanceValue">3 km
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="submit-btn" disabled>
+                <span class="btn-text">Register My Journey</span>
+                <span class="btn-spinner"></span>
+            </button>
+        </form>
+
+        <div class="success-screen" id="successScreen">
+            <h2 style="font-size:24px;font-weight:700;margin-bottom:10px;">You're in the Pool!</h2>
+            <p style="color:#6b7280;margin-bottom:20px;">Check your email for confirmation and edit links.</p>
+            <button onclick="location.reload()"
+                style="padding:12px 24px;background:white;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Register
+                Another</button>
+        </div>
+
+        <footer class="footer">
+            Community Carpool<br>
+            <a href="https://tally.so/r/Xxoqxz" target="_blank" style="color:#16a34a;text-decoration:none;">Contact
+                Support</a>
+        </footer>
+    </div>
+
+    <script>
+        // CLIENT SIDE LOGIC
+        // APPS_SCRIPT_URL is defined in head
+
+        async function loadFormData(token) {
+            try {
+                const res = await fetch(APPS_SCRIPT_URL + '?action=getByToken&token=' + encodeURIComponent(token));
+                const data = await res.json();
+                if (data.found) {
+                    document.getElementById('firstName').value = data.firstName;
+                    document.getElementById('email').value = data.email;
+                    document.getElementById('fromInput').value = data.fromLocation;
+                    document.getElementById('toInput').value = data.toLocation;
+                    document.getElementById('submitBtn').textContent = 'Update My Journey';
+                    updateProgress();
+                }
+            } catch (e) { console.log(e); }
+        }
+
+        async function deleteUserData(token) {
+            try {
+                const res = await fetch(APPS_SCRIPT_URL + '?action=deleteByToken&token=' + encodeURIComponent(token));
+                const data = await res.json();
+                if (data.success) { alert('Deleted.'); window.location.href = APPS_SCRIPT_URL; }
+            } catch (e) { alert('Error.'); }
+        }
+
+        // Logic to handle ?edit= or ?delete= on page load
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('edit')) loadFormData(params.get('edit'));
+        if (params.get('delete')) {
+            if (confirm('Delete your data?')) deleteUserData(params.get('delete'));
+            else window.location.href = APPS_SCRIPT_URL;
+        }
+
+        // Form Submission
+        document.getElementById('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('loading'); btn.disabled = true;
+
+            const data = {
+                action: params.get('edit') ? 'update' : 'new',
+                editToken: params.get('edit') || '',
+                firstName: document.getElementById('firstName').value,
+                email: document.getElementById('email').value,
+                fromLocation: document.getElementById('fromInput').value,
+                toLocation: document.getElementById('toInput').value,
+                distance: document.getElementById('distanceSlider').value
+            };
+
+            // Capture Coordinates from Autocomplete objects if available (simplified here)
+            // In a full implementation, you'd bind the Google Maps Places API variables here.
+            // For now, assuming text inputs are populated. 
+            // NOTE: Ensure you add the Google Maps API Script to <head> if you want autocomplete.
+
+            try {
+                await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                document.getElementById('form').style.display = 'none';
+                document.getElementById('successScreen').classList.add('show');
+            } catch (err) {
+                alert('Error'); btn.classList.remove('loading'); btn.disabled = false;
+            }
+        });
+
+        // Simple validation
+        const inputs = ['firstName', 'email', 'fromInput', 'toInput'];
+        inputs.forEach(id => document.getElementById(id).addEventListener('input', updateProgress));
+        function updateProgress() {
+            const valid = inputs.every(id => document.getElementById(id).value.length > 0);
+            document.getElementById('submitBtn').disabled = !valid;
+        }
+
+        // Slider
+        document.getElementById('distanceSlider').addEventListener('input', (e) => {
+            document.getElementById('distanceValue').textContent = e.target.value + ' km';
+        });
+
+    </script>
+
+    <!-- Google Maps API (Optional: specific key required) -->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=places&callback=init" async defer></script> -->
+</body>
+
+</html>
