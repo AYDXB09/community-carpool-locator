@@ -897,7 +897,12 @@
             fromAutocomplete.addListener('place_changed', () => {
                 const place = fromAutocomplete.getPlace();
                 if (place && (place.formatted_address || place.name)) {
-                    fromLocationText = place.formatted_address || place.name;
+                    // Prioritize POI name, append area for context
+                    if (place.name && place.formatted_address && place.name !== place.formatted_address) {
+                        fromLocationText = place.name + ' - ' + place.formatted_address;
+                    } else {
+                        fromLocationText = place.name || place.formatted_address;
+                    }
                     if (place.geometry && place.geometry.location) {
                         fromLatLng = place.geometry.location.lat() + ',' + place.geometry.location.lng();
                         fromSelected = true;
@@ -930,7 +935,12 @@
             toAutocomplete.addListener('place_changed', () => {
                 const place = toAutocomplete.getPlace();
                 if (place && (place.formatted_address || place.name)) {
-                    toLocationText = place.formatted_address || place.name;
+                    // Prioritize POI name, append area for context
+                    if (place.name && place.formatted_address && place.name !== place.formatted_address) {
+                        toLocationText = place.name + ' - ' + place.formatted_address;
+                    } else {
+                        toLocationText = place.name || place.formatted_address;
+                    }
                     if (place.geometry && place.geometry.location) {
                         toLatLng = place.geometry.location.lat() + ',' + place.geometry.location.lng();
                         toSelected = true;
