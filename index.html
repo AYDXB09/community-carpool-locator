@@ -1605,7 +1605,8 @@
                 console.log('Server response:', result);
 
                 if (result.success) {
-                    showSuccess({ num: result.num, distance: distanceStep }); // Use distanceStep for calc
+                    // Use actualDist from backend if available, otherwise use distanceStep for calc fallback
+                    showSuccess({ num: result.num, distanceVal: distanceStep, actualDist: result.actualDist });
                 } else {
                     throw new Error(result.error || 'Unknown error');
                 }
@@ -1632,11 +1633,18 @@
             // User just wants "Estimated".
 
             let km = 3;
-            const step = parseInt(data.distance);
-            if (step === 1) km = 1;
-            else if (step === 2) km = 2;
-            else if (step === 3) km = 4;
-            else if (step === 4) km = 6.5;
+
+            if (data.actualDist && parseInt(data.actualDist) > 0) {
+                km = parseInt(data.actualDist);
+                // console.log("Using actual distance from backend:", km);
+            } else {
+                // Fallback to slider estimation
+                const step = parseInt(data.distanceVal || data.distance); // handle both props
+                if (step === 1) km = 1;
+                else if (step === 2) km = 2;
+                else if (step === 3) km = 4;
+                else if (step === 4) km = 6.5;
+            }
 
             const annualKg = Math.round(km * 2 * 5 * 52 * 0.18);
             const trees = Math.round(annualKg / 21);
