@@ -493,6 +493,174 @@
                 padding: 20px 16px;
             }
         }
+
+        /* Terms Checkbox */
+        .terms-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 4px;
+        }
+
+        .terms-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .terms-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .terms-link {
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .terms-link:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .modal-body h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .modal-body h3:first-child {
+            margin-top: 0;
+        }
+
+        .modal-body p {
+            margin-bottom: 12px;
+        }
+
+        .modal-body ol,
+        .modal-body ul {
+            margin-bottom: 12px;
+            padding-left: 24px;
+        }
+
+        .modal-body li {
+            margin-bottom: 8px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            text-align: right;
+        }
+
+        .modal-btn {
+            padding: 10px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-btn:hover {
+            background: var(--primary-dark);
+        }
     </style>
 </head>
 
@@ -590,11 +758,92 @@
                 </div>
             </div>
 
+            <!-- Terms & Conditions -->
+            <div class="terms-wrapper">
+                <input type="checkbox" id="termsCheckbox" class="terms-checkbox" />
+                <label class="terms-label">
+                    I agree to the <span class="terms-link" onclick="openTermsModal()">Terms & Conditions</span>
+                </label>
+            </div>
+
             <button type="submit" id="submitBtn" class="submit-btn" disabled>
                 <span class="btn-text">Register My Journey</span>
                 <span class="btn-spinner"></span>
             </button>
         </form>
+
+        <!-- Terms Modal -->
+        <div class="modal-overlay" id="termsModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 class="modal-title">Terms & Conditions</h2>
+                    <button class="modal-close" onclick="closeTermsModal()">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h3>1. Introduction</h3>
+                    <p>Welcome to Community Carpool. By accessing or using our service, you agree to be bound by these
+                        Terms and Conditions. Please read them carefully before using the platform.</p>
+
+                    <h3>2. Service Description</h3>
+                    <p>Community Carpool is a matching platform that connects individuals with similar commute routes.
+                        We facilitate introductions only and do not provide transportation services.</p>
+                    <ul>
+                        <li>We match users based on their submitted route information</li>
+                        <li>Contact details are shared only between matched users</li>
+                        <li>All carpool arrangements are made directly between users</li>
+                    </ul>
+
+                    <h3>3. User Responsibilities</h3>
+                    <p>By using this service, you agree to:</p>
+                    <ol>
+                        <li>Provide accurate and truthful information</li>
+                        <li>Use the service for legitimate carpooling purposes only</li>
+                        <li>Treat other users with respect and courtesy</li>
+                        <li>Take reasonable safety precautions when meeting matches</li>
+                        <li>Not share other users' contact information with third parties</li>
+                    </ol>
+
+                    <h3>4. Privacy & Data</h3>
+                    <p>We collect and store your name, email, and approximate location data to provide matching
+                        services. Your email is shared only with matched users. You may request deletion of your data at
+                        any time using the link provided in your confirmation email.</p>
+
+                    <h3>5. Disclaimer of Liability</h3>
+                    <p>Community Carpool operates as a matching service only. We are not responsible for:</p>
+                    <ul>
+                        <li>The conduct, actions, or reliability of any user</li>
+                        <li>Any incidents, damages, or disputes arising from carpool arrangements</li>
+                        <li>The accuracy of information provided by other users</li>
+                        <li>Any transportation-related issues or accidents</li>
+                    </ul>
+
+                    <h3>6. Safety Recommendations</h3>
+                    <p>For your safety, we strongly recommend:</p>
+                    <ul>
+                        <li>Always meet in a public place first</li>
+                        <li>Verify the identity of your match before sharing a ride</li>
+                        <li>Inform someone you trust about your carpool arrangements</li>
+                        <li>Trust your instincts—if something feels wrong, don't proceed</li>
+                    </ul>
+
+                    <h3>7. Modifications</h3>
+                    <p>We reserve the right to modify these terms at any time. Continued use of the service after
+                        changes constitutes acceptance of the new terms.</p>
+
+                    <h3>8. Contact</h3>
+                    <p>For questions or concerns about these terms, please contact us through the feedback form on our
+                        website.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn" onclick="closeTermsModal()">I Understand</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Success -->
         <div class="success-screen" id="successScreen">
@@ -662,6 +911,33 @@
                 }
             }
         }
+
+        // ============================================
+        // TERMS MODAL
+        // ============================================
+        function openTermsModal() {
+            document.getElementById('termsModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTermsModal() {
+            document.getElementById('termsModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('termsModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeTermsModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeTermsModal();
+            }
+        });
 
         let fromLocationText = '', toLocationText = '';
         let fromLatLng = '', toLatLng = '';
@@ -807,15 +1083,21 @@
         // ============================================
         // PROGRESS & VALIDATION
         // ============================================
+        const termsCheckbox = document.getElementById('termsCheckbox');
+
         function updateProgress() {
             const hasName = firstName.value.trim().length > 0;
             const hasEmail = email.value.includes('@');
             const hasFrom = fromSelected || fromInput.value.trim().length > 3;
             const hasTo = toSelected || toInput.value.trim().length > 3;
+            const hasTerms = termsCheckbox.checked;
 
-            const valid = hasName && hasEmail && hasFrom && hasTo;
+            const valid = hasName && hasEmail && hasFrom && hasTo && hasTerms;
             submitBtn.disabled = !valid;
         }
+
+        // Listen for terms checkbox changes
+        termsCheckbox.addEventListener('change', updateProgress);
 
         function validateEmail(v) {
             return v.includes('@') && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
