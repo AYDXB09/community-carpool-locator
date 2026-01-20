@@ -1606,7 +1606,12 @@
 
                 if (result.success) {
                     // Use actualDist from backend if available, otherwise use distanceStep for calc fallback
-                    showSuccess({ num: result.num, distanceVal: distanceStep, actualDist: result.actualDist });
+                    showSuccess({
+                        num: result.num,
+                        journeyNum: result.journeyNum, // Pass journeyNum to showSuccess
+                        distanceVal: distanceStep,
+                        actualDist: result.actualDist
+                    });
                 } else {
                     throw new Error(result.error || 'Unknown error');
                 }
@@ -1667,7 +1672,7 @@
                             </div>
                             You're in the Pool!
                         </div>
-                        <div class="conf-sub">You have successfully recorded Journey # ${data.num}</div>
+                        <div class="conf-sub">You have successfully recorded Journey # ${data.journeyNum}</div>
                     </div>
                 </div>
 
@@ -1679,9 +1684,13 @@
                     <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">(Based on ${km} km one-way commute)</div>
                 </div>
 
-                <div style="padding: 0 24px 40px; background: white; border-radius: 0 0 24px 24px; border: 2px solid #ecfdf5; border-top: none;">
-                    <div style="margin-top: -15px; margin-bottom: 25px;">
-                        <a href="https://script.google.com/macros/s/AKfycbzEPB-vy6L8aFanZCozRq76F5MND31WAhgRkgAuigqhRsnnNuQEfWChdtEHBLWVOIF2/exec?page=carbon" target="_blank" class="calc-link">Estimated Emissions Calculator</a>
+                <div style="padding: 20px 24px 40px; background: white; border-radius: 0 0 24px 24px; border: 2px solid #ecfdf5; border-top: none;">
+                    
+                    <div style="margin: 10px 0 25px; text-align: center;">
+                        <a href="https://script.google.com/macros/s/AKfycbzEPB-vy6L8aFanZCozRq76F5MND31WAhgRkgAuigqhRsnnNuQEfWChdtEHBLWVOIF2/exec?page=carbon" target="_blank" 
+                           style="color: #64748b; font-size: 14px; text-decoration: underline; font-weight: 500;">
+                           Estimated Emissions Calculator
+                        </a>
                     </div>
 
                     <div class="share-yellow-box">
