@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Hub - Community Carpool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #1a365d;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        select,
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        select:focus,
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .rating-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .star {
+            font-size: 32px;
+            cursor: pointer;
+            color: #cbd5e1;
+            transition: all 0.2s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .logo h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>💬 Support Hub</h1>
+            <p>Community Carpool</p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <form id="supportForm">
+            <!-- Request Type Selector -->
+            <div class="form-group">
+                <label for="requestType">What can we help you with? <span class="required">*</span></label>
+                <select id="requestType" name="requestType" required>
+                    <option value="">Select a request type...</option>
+                    <option value="deletion">Data Deletion Request</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="success">Report Successful Match</option>
+                    <option value="issue">Report an Issue</option>
+                </select>
+            </div>
+
+            <!-- Data Deletion Fields -->
+            <div id="deletionFields" class="hidden">
+                <div class="form-group">
+                    <label for="deletionEmail">What Email did you use to submit the form? <span
+                            class="required">*</span></label>
+                    <input type="email" id="deletionEmail" name="deletionEmail" placeholder="your@email.com">
+                </div>
+            </div>
+
+            <!-- Feedback Fields -->
+            <div id="feedbackFields" class="hidden">
+                <div class="form-group">
+                    <label>How would you rate your experience? <span class="required">*</span></label>
+                    <div class="rating-container" id="ratingStars">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <input type="hidden" id="rating" name="rating">
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Tell us about your experience <span class="required">*</span></label>
+                    <textarea id="experience" name="experience" placeholder="Share your thoughts..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="suggestions">Any suggestions for improvement? <span class="required">*</span></label>
+                    <textarea id="suggestions" name="suggestions"
+                        placeholder="We'd love to hear your ideas..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="recommend">Would you recommend this to a friend? <span class="required">*</span></label>
+                    <select id="recommend" name="recommend">
+                        <option value="">Select...</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="Maybe">Maybe</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Successful Match Fields -->
+            <div id="successFields" class="hidden">
+                <div class="form-group">
+                    <label for="successDetails">Additional details (optional):</label>
+                    <textarea id="successDetails" name="successDetails"
+                        placeholder="Tell us about your successful match..."></textarea>
+                </div>
+            </div>
+
+            <!-- Issue Report Fields -->
+            <div id="issueFields" class="hidden">
+                <div class="form-group">
+                    <label for="reporterEmail">What Email did you use to submit the form? <span
+                            class="required">*</span></label>
+                    <input type="email" id="reporterEmail" name="reporterEmail" placeholder="your@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="subjectEmail">What Email did you want to file the report on</label>
+                    <input type="email" id="subjectEmail" name="subjectEmail" placeholder="reported@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="issueDescription">Please describe the issue you encountered with this match.</label>
+                    <select id="issueDescription" name="issueDescription">
+                        <option value="">Select issue type...</option>
+                        <option value="Spam/Harassment">Spam/Harassment</option>
+                        <option value="Fake Profile">Fake Profile</option>
+                        <option value="Safety Concern">Safety Concern</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0ZY200s7rjktsFWshKCRIMu3GA8jPTMUk6CPX4k6UrrPr6yBo0x3NAZE_iv6wMQk/exec';
+
+        const form = document.getElementById('supportForm');
+        const requestType = document.getElementById('requestType');
+        const message = document.getElementById('message');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Field containers
+        const deletionFields = document.getElementById('deletionFields');
+        const feedbackFields = document.getElementById('feedbackFields');
+        const successFields = document.getElementById('successFields');
+        const issueFields = document.getElementById('issueFields');
+
+        // Rating stars
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+        let selectedRating = 0;
+
+        // Show/hide fields based on request type
+        requestType.addEventListener('change', function () {
+            // Hide all field groups
+            deletionFields.classList.add('hidden');
+            feedbackFields.classList.add('hidden');
+            successFields.classList.add('hidden');
+            issueFields.classList.add('hidden');
+
+            // Clear previous validation
+            clearValidation();
+
+            // Show relevant fields
+            switch (this.value) {
+                case 'deletion':
+                    deletionFields.classList.remove('hidden');
+                    break;
+                case 'feedback':
+                    feedbackFields.classList.remove('hidden');
+                    break;
+                case 'success':
+                    successFields.classList.remove('hidden');
+                    break;
+                case 'issue':
+                    issueFields.classList.remove('hidden');
+                    break;
+            }
+        });
+
+        // Star rating functionality
+        stars.forEach(star => {
+            star.addEventListener('click', function () {
+                selectedRating = parseInt(this.dataset.rating);
+                ratingInput.value = selectedRating;
+                updateStars();
+            });
+
+            star.addEventListener('mouseenter', function () {
+                const hoverRating = parseInt(this.dataset.rating);
+                stars.forEach((s, index) => {
+                    if (index < hoverRating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        document.getElementById('ratingStars').addEventListener('mouseleave', updateStars);
+
+        function updateStars() {
+            stars.forEach((star, index) => {
+                if (index < selectedRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Form submission
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('Thank you! Your request has been submitted successfully.', 'success');
+                    form.reset();
+                    selectedRating = 0;
+                    updateStars();
+                    requestType.dispatchEvent(new Event('change'));
+                } else {
+                    showMessage('Error: ' + (result.message || 'Something went wrong. Please try again.'), 'error');
+                }
+            } catch (error) {
+                showMessage('Error: Unable to submit form. Please try again later.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
+            }
+        });
+
+        function validateForm() {
+            const type = requestType.value;
+
+            if (!type) {
+                showMessage('Please select a request type.', 'error');
+                return false;
+            }
+
+            switch (type) {
+                case 'deletion':
+                    const deletionEmail = document.getElementById('deletionEmail').value;
+                    if (!deletionEmail) {
+                        showMessage('Please enter your email address.', 'error');
+                        return false;
+                    }
+                    break;
+
+                case 'feedback':
+                    if (!selectedRating) {
+                        showMessage('Please select a rating.', 'error');
+                        return false;
+                    }
+                    if (!document.getElementById('experience').value) {
+                        showMessage('Please describe your experience.', 'error');
+                        return false;
+                    }
+                    if (!document.getElementById('suggestions').value) {
+                        showMessage('Please provide suggestions.', 'error');
+                        return false;
+                    }
+                    if (!document.getElementById('recommend').value) {
+                        showMessage('Please select if you would recommend us.', 'error');
+                        return false;
+                    }
+                    break;
+
+                case 'issue':
+                    if (!document.getElementById('reporterEmail').value) {
+                        showMessage('Please enter your email address.', 'error');
+                        return false;
+                    }
+                    break;
+            }
+
+            return true;
+        }
+
+        function clearValidation() {
+            message.classList.remove('show');
+        }
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = 'message ' + type + ' show';
+            message.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+
+</html>
