@@ -1118,6 +1118,21 @@
         const SHARE_URL = 'https://aydxb09.github.io/community-carpool/';
 
         // ============================================
+        // DAMAC VERSION CONFIG
+        // ============================================
+        const DAMAC_LOCATIONS = {
+            'shatha': {
+                name: 'Shatha Tower, Al Sufouh',
+                latlng: '25.0895035,55.1530186'
+            },
+            'executive': {
+                name: 'DAMAC Executive Heights, Barsha Heights',
+                latlng: '25.0953478,55.1728533'
+            }
+        };
+        let isDamacMode = false;
+
+        // ============================================
         // SHARE LOGIC
         // ============================================
         async function shareNative() {
@@ -1438,42 +1453,44 @@
             });
 
             // TO
-            toAutocomplete = new google.maps.places.Autocomplete(toInput, options);
-            toAutocomplete.setBounds(bounds);
-            toAutocomplete.addListener('place_changed', () => {
-                const place = toAutocomplete.getPlace();
-                if (place && (place.formatted_address || place.name)) {
-                    // Prioritize POI name, append area for context
-                    if (place.name && place.formatted_address && place.name !== place.formatted_address) {
-                        toLocationText = place.name + ' - ' + place.formatted_address;
-                    } else {
-                        toLocationText = place.name || place.formatted_address;
+            if (!isDamacMode) {
+                toAutocomplete = new google.maps.places.Autocomplete(toInput, options);
+                toAutocomplete.setBounds(bounds);
+                toAutocomplete.addListener('place_changed', () => {
+                    const place = toAutocomplete.getPlace();
+                    if (place && (place.formatted_address || place.name)) {
+                        // Prioritize POI name, append area for context
+                        if (place.name && place.formatted_address && place.name !== place.formatted_address) {
+                            toLocationText = place.name + ' - ' + place.formatted_address;
+                        } else {
+                            toLocationText = place.name || place.formatted_address;
+                        }
+                        if (place.geometry && place.geometry.location) {
+                            toLatLng = place.geometry.location.lat() + ',' + place.geometry.location.lng();
+                            toSelected = true;
+                            setLocationStatus('to', 'success');
+                        } else {
+                            // Geocode the address if geometry is missing
+                            setLocationStatus('to', 'loading');
+                            const geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({ address: toLocationText }, (results, status) => {
+                                if (status === 'OK' && results[0] && results[0].geometry) {
+                                    toLatLng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
+                                    toSelected = true;
+                                    setLocationStatus('to', 'success');
+                                } else {
+                                    console.warn('Geocoding failed for To location:', status);
+                                    toLatLng = '';
+                                    setLocationStatus('to', '');
+                                }
+                                updateProgress();
+                            });
+                            return; // Exit early, updateProgress will be called in geocoder callback
+                        }
                     }
-                    if (place.geometry && place.geometry.location) {
-                        toLatLng = place.geometry.location.lat() + ',' + place.geometry.location.lng();
-                        toSelected = true;
-                        setLocationStatus('to', 'success');
-                    } else {
-                        // Geocode the address if geometry is missing
-                        setLocationStatus('to', 'loading');
-                        const geocoder = new google.maps.Geocoder();
-                        geocoder.geocode({ address: toLocationText }, (results, status) => {
-                            if (status === 'OK' && results[0] && results[0].geometry) {
-                                toLatLng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
-                                toSelected = true;
-                                setLocationStatus('to', 'success');
-                            } else {
-                                console.warn('Geocoding failed for To location:', status);
-                                toLatLng = '';
-                                setLocationStatus('to', '');
-                            }
-                            updateProgress();
-                        });
-                        return; // Exit early, updateProgress will be called in geocoder callback
-                    }
-                }
-                updateProgress();
-            });
+                    updateProgress();
+                });
+            }
 
             // Reset on type
             fromInput.addEventListener('input', () => {
@@ -1731,6 +1748,44 @@
         updateProgress();
 
 
+
+        // ============================================
+        // DAMAC MODE INITIALIZATION
+        // ============================================
+        function initDamacMode() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('client') === 'damac') {
+                isDamacMode = true;
+                console.log('Damac client mode active');
+
+                // Change toInput to a dropdown
+                const toWrapper = toInput.parentElement;
+                toWrapper.innerHTML = `
+                    <select id="toInput" class="place-input" style="height: 48px; -webkit-appearance: none; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2316a34a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 0.7rem top 50%; background-size: 0.65rem auto; padding-right: 3rem;">
+                        <option value="" disabled selected>Select Destination</option>
+                        <option value="shatha">Shatha Tower</option>
+                        <option value="executive">DAMAC Executive Heights</option>
+                    </select>
+                    <div class="location-status" id="toStatus" style="right: 40px;"></div>
+                `;
+
+                // Re-cache reference and add listener
+                const newToInput = document.getElementById('toInput');
+                newToInput.addEventListener('change', (e) => {
+                    const loc = DAMAC_LOCATIONS[e.target.value];
+                    if (loc) {
+                        toLocationText = loc.name;
+                        toLatLng = loc.latlng;
+                        toSelected = true;
+                        setLocationStatus('to', 'success');
+                    }
+                    updateProgress();
+                });
+            }
+        }
+
+        // Run Damac check before anything else
+        initDamacMode();
 
         // Initial
         updateProgress();
