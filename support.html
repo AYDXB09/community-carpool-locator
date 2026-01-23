@@ -17,7 +17,8 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f8fafc;
+            /* Very light background instead of gradient */
             min-height: 100vh;
             padding: 20px;
             display: flex;
@@ -30,7 +31,8 @@
             width: 100%;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            /* Softer shadow */
             padding: 40px;
             animation: slideIn 0.5s ease-out;
         }
@@ -49,10 +51,11 @@
 
         .logo-img {
             display: block;
-            max-width: 180px;
+            max-width: 250px;
+            /* Slogan logo might be wider */
             width: 100%;
             height: auto;
-            margin: 0 auto 20px auto;
+            margin: 0 auto 10px auto;
         }
 
         .logo {
@@ -110,8 +113,9 @@
         input:focus,
         textarea:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #10b981;
+            /* Green focus */
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
         textarea {
@@ -146,7 +150,8 @@
         .submit-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #10b981;
+            /* Green background */
             color: white;
             border: none;
             border-radius: 10px;
@@ -158,14 +163,17 @@
         }
 
         .submit-btn:hover {
+            background: #059669;
+            /* Darker green on hover */
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
         }
 
         .submit-btn:disabled {
             background: #94a3b8;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .message {
@@ -202,6 +210,7 @@
         .thank-you-icon {
             font-size: 80px;
             margin-bottom: 20px;
+            color: #10b981;
         }
 
         .thank-you h2 {
@@ -220,7 +229,7 @@
         .back-btn {
             display: inline-block;
             padding: 14px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #10b981;
             color: white;
             border: none;
             border-radius: 10px;
@@ -232,8 +241,9 @@
         }
 
         .back-btn:hover {
+            background: #059669;
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
         }
 
         @media (max-width: 640px) {
@@ -247,7 +257,7 @@
             }
 
             .logo-img {
-                max-width: 140px;
+                max-width: 200px;
             }
 
             .logo h1 {
@@ -272,8 +282,7 @@
 <body>
     <div class="container">
         <!-- Logo -->
-        <img src="https://drive.google.com/thumbnail?id=1oNpXvPuHrlIEoGIMh2XrUU1hJz_qZtaU&sz=w400"
-            alt="Community Carpool Logo" class="logo-img">
+        <img src="Car_Pool_with slogan.png" alt="Community Carpool Logo" class="logo-img">
 
         <div class="logo">
             <h1>💬 Support Hub</h1>
@@ -366,9 +375,12 @@
                         <input type="email" id="reporterEmail" name="reporterEmail" placeholder="your@email.com">
                     </div>
 
+                    <!-- Updated Field: Replaced Subject Email with User Description TextArea -->
                     <div class="form-group">
-                        <label for="subjectEmail">Are you reporting on another User - Please share their Email</label>
-                        <input type="email" id="subjectEmail" name="subjectEmail" placeholder="reported.user@email.com">
+                        <label for="userDescription">Reporting on another User - Please share their Email and your
+                            concern <span class="required">*</span></label>
+                        <textarea id="userDescription" name="userDescription"
+                            placeholder="Please provide their email address and explain the issue..."></textarea>
                     </div>
 
                     <div class="form-group">
@@ -552,6 +564,10 @@
                 case 'issue':
                     if (!document.getElementById('reporterEmail').value) {
                         showMessage('Please enter your email address.', 'error');
+                        return false;
+                    }
+                    if (!document.getElementById('userDescription').value) {
+                        showMessage('Please provide description and email of whom you are reporting on.', 'error');
                         return false;
                     }
                     break;
