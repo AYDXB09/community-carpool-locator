@@ -47,6 +47,14 @@
             }
         }
 
+        .logo-img {
+            display: block;
+            max-width: 180px;
+            width: 100%;
+            height: auto;
+            margin: 0 auto 20px auto;
+        }
+
         .logo {
             text-align: center;
             margin-bottom: 30px;
@@ -80,6 +88,12 @@
             color: #ef4444;
         }
 
+        .optional {
+            color: #94a3b8;
+            font-weight: 400;
+            font-size: 12px;
+        }
+
         select,
         input[type="email"],
         textarea {
@@ -109,6 +123,7 @@
             display: flex;
             gap: 10px;
             margin-top: 8px;
+            justify-content: center;
         }
 
         .star {
@@ -178,12 +193,76 @@
             animation: slideIn 0.3s ease-out;
         }
 
+        /* Thank You Page Styles */
+        .thank-you {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .thank-you-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .thank-you h2 {
+            color: #1a365d;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .thank-you p {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
         @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+
             .container {
-                padding: 30px 20px;
+                padding: 25px 15px;
+                border-radius: 15px;
+            }
+
+            .logo-img {
+                max-width: 140px;
             }
 
             .logo h1 {
+                font-size: 22px;
+            }
+
+            .star {
+                font-size: 28px;
+            }
+
+            .thank-you-icon {
+                font-size: 60px;
+            }
+
+            .thank-you h2 {
                 font-size: 24px;
             }
         }
@@ -192,107 +271,129 @@
 
 <body>
     <div class="container">
+        <!-- Logo -->
+        <img src="https://drive.google.com/thumbnail?id=1oNpXvPuHrlIEoGIMh2XrUU1hJz_qZtaU&sz=w400"
+            alt="Community Carpool Logo" class="logo-img">
+
         <div class="logo">
             <h1>💬 Support Hub</h1>
-            <p>Community Carpool</p>
         </div>
 
-        <div id="message" class="message"></div>
+        <!-- Form Section -->
+        <div id="formSection">
+            <div id="message" class="message"></div>
 
-        <form id="supportForm">
-            <!-- Request Type Selector -->
-            <div class="form-group">
-                <label for="requestType">What can we help you with? <span class="required">*</span></label>
-                <select id="requestType" name="requestType" required>
-                    <option value="">Select a request type...</option>
-                    <option value="deletion">Data Deletion Request</option>
-                    <option value="feedback">Feedback</option>
-                    <option value="success">Report Successful Match</option>
-                    <option value="issue">Report an Issue</option>
-                </select>
-            </div>
-
-            <!-- Data Deletion Fields -->
-            <div id="deletionFields" class="hidden">
+            <form id="supportForm">
+                <!-- Request Type Selector -->
                 <div class="form-group">
-                    <label for="deletionEmail">What Email did you use to submit the form? <span
-                            class="required">*</span></label>
-                    <input type="email" id="deletionEmail" name="deletionEmail" placeholder="your@email.com">
+                    <label for="requestType">What can we help you with? <span class="required">*</span></label>
+                    <select id="requestType" name="requestType" required>
+                        <option value="">Select a request type...</option>
+                        <option value="deletion">Data Deletion Request</option>
+                        <option value="feedback">Feedback</option>
+                        <option value="success">Report Successful Match</option>
+                        <option value="issue">Report an Issue</option>
+                    </select>
                 </div>
-            </div>
 
-            <!-- Feedback Fields -->
-            <div id="feedbackFields" class="hidden">
-                <div class="form-group">
-                    <label>How would you rate your experience? <span class="required">*</span></label>
-                    <div class="rating-container" id="ratingStars">
-                        <span class="star" data-rating="1">★</span>
-                        <span class="star" data-rating="2">★</span>
-                        <span class="star" data-rating="3">★</span>
-                        <span class="star" data-rating="4">★</span>
-                        <span class="star" data-rating="5">★</span>
+                <!-- Data Deletion Fields -->
+                <div id="deletionFields" class="hidden">
+                    <div class="form-group">
+                        <label for="deletionEmail">What Email did you use to submit the form? <span
+                                class="required">*</span></label>
+                        <input type="email" id="deletionEmail" name="deletionEmail" placeholder="your@email.com">
                     </div>
-                    <input type="hidden" id="rating" name="rating">
+                    <div class="form-group">
+                        <label for="deletionDetails">Additional details (optional): <span class="optional">Is it a
+                                specific Journey or All Journeys</span></label>
+                        <textarea id="deletionDetails" name="deletionDetails"
+                            placeholder="e.g., Delete Journey #5 only, or Delete all my journeys..."></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="experience">Tell us about your experience <span class="required">*</span></label>
-                    <textarea id="experience" name="experience" placeholder="Share your thoughts..."></textarea>
+                <!-- Feedback Fields -->
+                <div id="feedbackFields" class="hidden">
+                    <div class="form-group">
+                        <label>How would you rate your experience? <span class="required">*</span></label>
+                        <div class="rating-container" id="ratingStars">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="rating" name="rating">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience">Tell us about your experience <span class="required">*</span></label>
+                        <textarea id="experience" name="experience" placeholder="Share your thoughts..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="suggestions">Any suggestions for improvement? <span
+                                class="required">*</span></label>
+                        <textarea id="suggestions" name="suggestions"
+                            placeholder="We'd love to hear your ideas..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recommend">Would you recommend this to a friend? <span
+                                class="optional">(optional)</span></label>
+                        <select id="recommend" name="recommend">
+                            <option value="">Select...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Maybe">Maybe</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="suggestions">Any suggestions for improvement? <span class="required">*</span></label>
-                    <textarea id="suggestions" name="suggestions"
-                        placeholder="We'd love to hear your ideas..."></textarea>
+                <!-- Successful Match Fields -->
+                <div id="successFields" class="hidden">
+                    <div class="form-group">
+                        <label for="successDetails">Additional details (optional):</label>
+                        <textarea id="successDetails" name="successDetails"
+                            placeholder="Tell us about your successful match..."></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="recommend">Would you recommend this to a friend? <span class="required">*</span></label>
-                    <select id="recommend" name="recommend">
-                        <option value="">Select...</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        <option value="Maybe">Maybe</option>
-                    </select>
-                </div>
-            </div>
+                <!-- Issue Report Fields -->
+                <div id="issueFields" class="hidden">
+                    <div class="form-group">
+                        <label for="reporterEmail">What Email did you use to submit the form? <span
+                                class="required">*</span></label>
+                        <input type="email" id="reporterEmail" name="reporterEmail" placeholder="your@email.com">
+                    </div>
 
-            <!-- Successful Match Fields -->
-            <div id="successFields" class="hidden">
-                <div class="form-group">
-                    <label for="successDetails">Additional details (optional):</label>
-                    <textarea id="successDetails" name="successDetails"
-                        placeholder="Tell us about your successful match..."></textarea>
-                </div>
-            </div>
+                    <div class="form-group">
+                        <label for="subjectEmail">Are you reporting on another User - Please share their Email</label>
+                        <input type="email" id="subjectEmail" name="subjectEmail" placeholder="reported.user@email.com">
+                    </div>
 
-            <!-- Issue Report Fields -->
-            <div id="issueFields" class="hidden">
-                <div class="form-group">
-                    <label for="reporterEmail">What Email did you use to submit the form? <span
-                            class="required">*</span></label>
-                    <input type="email" id="reporterEmail" name="reporterEmail" placeholder="your@email.com">
+                    <div class="form-group">
+                        <label for="issueDescription">Please describe the issue you encountered with this match.</label>
+                        <select id="issueDescription" name="issueDescription">
+                            <option value="">Select issue type...</option>
+                            <option value="Spam/Harassment">Spam/Harassment</option>
+                            <option value="Fake Profile">Fake Profile</option>
+                            <option value="Safety Concern">Safety Concern</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="subjectEmail">What Email did you want to file the report on</label>
-                    <input type="email" id="subjectEmail" name="subjectEmail" placeholder="reported@email.com">
-                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+            </form>
+        </div>
 
-                <div class="form-group">
-                    <label for="issueDescription">Please describe the issue you encountered with this match.</label>
-                    <select id="issueDescription" name="issueDescription">
-                        <option value="">Select issue type...</option>
-                        <option value="Spam/Harassment">Spam/Harassment</option>
-                        <option value="Fake Profile">Fake Profile</option>
-                        <option value="Safety Concern">Safety Concern</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-            </div>
-
-            <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
-        </form>
+        <!-- Thank You Section -->
+        <div id="thankYouSection" class="thank-you hidden">
+            <div class="thank-you-icon">✅</div>
+            <h2>Thank You!</h2>
+            <p>Your request has been submitted successfully.<br>We'll review it and get back to you if needed.</p>
+            <a href="support.html" class="back-btn">Submit Another Request</a>
+        </div>
     </div>
 
     <script>
@@ -302,6 +403,8 @@
         const requestType = document.getElementById('requestType');
         const message = document.getElementById('message');
         const submitBtn = document.getElementById('submitBtn');
+        const formSection = document.getElementById('formSection');
+        const thankYouSection = document.getElementById('thankYouSection');
 
         // Field containers
         const deletionFields = document.getElementById('deletionFields');
@@ -397,17 +500,17 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    showMessage('Thank you! Your request has been submitted successfully.', 'success');
-                    form.reset();
-                    selectedRating = 0;
-                    updateStars();
-                    requestType.dispatchEvent(new Event('change'));
+                    // Show thank you page
+                    formSection.classList.add('hidden');
+                    thankYouSection.classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
                     showMessage('Error: ' + (result.message || 'Something went wrong. Please try again.'), 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit';
                 }
             } catch (error) {
                 showMessage('Error: Unable to submit form. Please try again later.', 'error');
-            } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit';
             }
@@ -443,10 +546,7 @@
                         showMessage('Please provide suggestions.', 'error');
                         return false;
                     }
-                    if (!document.getElementById('recommend').value) {
-                        showMessage('Please select if you would recommend us.', 'error');
-                        return false;
-                    }
+                    // "recommend" is now optional - no validation required
                     break;
 
                 case 'issue':
