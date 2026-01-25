@@ -537,9 +537,10 @@
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
+            data.userip = userIP; // Include IP in the JSON body
 
             try {
-                const response = await fetch(SCRIPT_URL + '?userip=' + encodeURIComponent(userIP), {
+                const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify(data)
                 });
