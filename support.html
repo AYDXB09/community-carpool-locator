@@ -440,9 +440,9 @@
         const stars = document.querySelectorAll('.star');
         const ratingInput = document.getElementById('rating');
         let selectedRating = 0;
-        let userIP = 'Unknown';
+        let userIP = '';
 
-        // Get IP for tracking
+        // Get IP for tracking (consistent with index.html)
         async function getIPInfo() {
             const apis = [
                 { url: 'https://ipwho.is/', parse: d => d.ip },
@@ -457,10 +457,14 @@
                     const ip = api.parse(data);
                     if (ip) {
                         userIP = ip;
+                        console.log('Detected IP:', userIP);
                         return;
                     }
-                } catch (e) { }
+                } catch (e) {
+                    console.warn('IP fetch failed for ' + api.url);
+                }
             }
+            console.log('IP detection failed, using fallback');
         }
         getIPInfo();
 
@@ -537,7 +541,7 @@
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
-            data.userip = userIP; // Include IP in the JSON body
+            data.userip = userIP || 'Unknown'; // Fallback only at submission time
 
             try {
                 const response = await fetch(SCRIPT_URL, {
