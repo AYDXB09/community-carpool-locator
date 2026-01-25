@@ -442,13 +442,14 @@
         let selectedRating = 0;
         let userIP = '';
 
-        // Get IP for tracking (consistent with index.html)
+        // Get IP for tracking (Harmonized with index.html for reliability)
         async function getIPInfo() {
             const apis = [
                 { url: 'https://ipwho.is/', parse: d => d.ip },
                 { url: 'https://api.ipify.org?format=json', parse: d => d.ip },
                 { url: 'https://api.db-ip.com/v2/free/self', parse: d => d.ipAddress }
             ];
+
             for (const api of apis) {
                 try {
                     const res = await fetch(api.url);
@@ -461,10 +462,10 @@
                         return;
                     }
                 } catch (e) {
-                    console.warn('IP fetch failed for ' + api.url);
+                    console.log('IP fetch failed for ' + api.url);
                 }
             }
-            console.log('IP detection failed, using fallback');
+            userIP = 'unknown';
         }
         getIPInfo();
 
@@ -541,11 +542,13 @@
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
-            data.userip = userIP || 'Unknown'; // Fallback only at submission time
+            data.ip = userIP || 'unknown'; // Use 'ip' to match main project pattern
 
             try {
-                const response = await fetch(SCRIPT_URL, {
+                // Apps Script quirk: use text/plain to avoid CORS preflight (OPTIONS request)
+                const response = await fetch(SCRIPT_URL + '?ip=' + encodeURIComponent(userIP || 'unknown'), {
                     method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(data)
                 });
 
