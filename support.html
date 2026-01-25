@@ -440,6 +440,29 @@
         const stars = document.querySelectorAll('.star');
         const ratingInput = document.getElementById('rating');
         let selectedRating = 0;
+        let userIP = 'Unknown';
+
+        // Get IP for tracking
+        async function getIPInfo() {
+            const apis = [
+                { url: 'https://ipwho.is/', parse: d => d.ip },
+                { url: 'https://api.ipify.org?format=json', parse: d => d.ip },
+                { url: 'https://api.db-ip.com/v2/free/self', parse: d => d.ipAddress }
+            ];
+            for (const api of apis) {
+                try {
+                    const res = await fetch(api.url);
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    const ip = api.parse(data);
+                    if (ip) {
+                        userIP = ip;
+                        return;
+                    }
+                } catch (e) { }
+            }
+        }
+        getIPInfo();
 
         // Show/hide fields based on request type
         requestType.addEventListener('change', function () {
@@ -516,7 +539,7 @@
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch(SCRIPT_URL, {
+                const response = await fetch(SCRIPT_URL + '?userip=' + encodeURIComponent(userIP), {
                     method: 'POST',
                     body: JSON.stringify(data)
                 });
